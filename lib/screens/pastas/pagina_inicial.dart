@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:shuri/components/icone_pessoa.dart';
-import 'package:shuri/screens/pastas/documentos.dart';
+import 'package:shuri/components/barra_superior.dart';
+import 'package:shuri/components/pasta.dart';
 import 'package:shuri/screens/pastas/nova_pasta.dart';
+
+import 'documentos.dart';
 
 class PaginaInicial extends StatefulWidget {
   @override
@@ -16,25 +18,18 @@ class _PaginaInicialState extends State<PaginaInicial> {
     return Scaffold(
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 24.0, right: 24.0, top: 56.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Icon(Icons.crop_square),
-                IconePessoa(texto: 'K'),
-              ],
-            ),
+          BarraSuperior(
+            textoPessoa: 'K',
+            voltar: false,
           ),
           ListView.builder(
             shrinkWrap: true,
             scrollDirection: Axis.vertical,
             itemCount: _pastas.length,
             itemBuilder: (context, index) {
-              return ListTile(
-                leading: Icon(Icons.folder),
-                title: Text(_pastas[index]),
-                onTap: () => Navigator.push(
+              return Pasta(
+                nomePasta: _pastas[index],
+                onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => Documentos(),
@@ -63,6 +58,27 @@ class _PaginaInicialState extends State<PaginaInicial> {
             });
           }
         },
+      ),
+      bottomNavigationBar: Container(
+        color: Color.fromRGBO(255, 190, 74, 1),
+        height: MediaQuery.of(context).size.height * 0.1,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Icon(
+              Icons.folder,
+              color: Colors.white,
+            ),
+            Icon(
+              Icons.notifications,
+              color: Colors.white,
+            ),
+            Icon(
+              Icons.settings,
+              color: Colors.white,
+            ),
+          ],
+        ),
       ),
     );
   }

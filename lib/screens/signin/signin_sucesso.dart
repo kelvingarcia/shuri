@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:shuri/http/webclients/treina_mobileclient.dart';
 import 'package:shuri/models/reconhece_request.dart';
 import 'package:shuri/models/reconhecimento_token.dart';
-import 'package:shuri/screens/menu_inicial.dart';
 import 'package:shuri/screens/pastas/pagina_inicial.dart';
 
 class SignInSucesso extends StatefulWidget {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shuri/screens/menu_inicial.dart';
 import 'package:shuri/screens/pastas/pagina_inicial.dart';
 
 void main() {
