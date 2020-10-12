@@ -7,16 +7,16 @@ import 'dart:ui' as ui;
 
 import 'package:shuri/http/webclients/treina_mobileclient.dart';
 
-class Documento extends StatefulWidget {
+class DocumentoTela extends StatefulWidget {
   final Imagem imagem;
 
-  Documento({Key key, this.imagem}) : super(key: key);
+  DocumentoTela({Key key, this.imagem}) : super(key: key);
 
   @override
-  _DocumentoState createState() => _DocumentoState();
+  _DocumentoTelaState createState() => _DocumentoTelaState();
 }
 
-class _DocumentoState extends State<Documento> {
+class _DocumentoTelaState extends State<DocumentoTela> {
   GlobalKey _globalKey = GlobalKey();
   List<Offset> _points = <Offset>[];
   double xPosition = 190;

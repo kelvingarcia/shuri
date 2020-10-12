@@ -6,7 +6,7 @@ import 'package:shuri/models/pessoa_dto.dart';
 import 'package:shuri/models/reconhece_request.dart';
 import 'package:shuri/models/reconhecimento_token.dart';
 import 'package:shuri/models/treina_request.dart';
-import 'package:shuri/screens/documento/documento.dart';
+import 'package:shuri/screens/documento/documento_tela.dart';
 
 class TreinaMobileClient {
   static Future<PessoaDTO> postPessoa(TreinaRequest treinaRequest) async {

@@ -6,17 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shuri/models/reconhece_request.dart';
-import 'package:shuri/models/treina_request.dart';
 import 'package:shuri/screens/signin/signin_sucesso.dart';
 
 class SignInVideoMobile extends StatefulWidget {
   final CameraDescription camera;
-  TreinaRequest treinaRequest;
 
   SignInVideoMobile({
     Key key,
     @required this.camera,
-    this.treinaRequest,
   }) : super(key: key);
 
   @override

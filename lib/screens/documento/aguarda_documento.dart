@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shuri/http/webclients/treina_mobileclient.dart';
-import 'package:shuri/screens/documento/documento.dart';
+import 'package:shuri/screens/documento/documento_tela.dart';
 
 class AguardaDocumento extends StatefulWidget {
   @override
@@ -39,7 +39,7 @@ class _AguardaDocumentoState extends State<AguardaDocumento> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Documento(
+                    builder: (context) => DocumentoTela(
                       imagem: snapshot.data,
                     ),
                   ),

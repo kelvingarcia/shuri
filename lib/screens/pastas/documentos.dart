@@ -1,12 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:shuri/components/barra_superior.dart';
+import 'package:shuri/components/documento_card.dart';
 import 'package:shuri/components/icone_pessoa.dart';
 import 'package:shuri/components/pasta.dart';
-import 'package:shuri/http/webclients/treina_mobileclient.dart';
-import 'package:shuri/screens/documento/aguarda_documento.dart';
-import 'package:shuri/screens/documento/documento.dart';
+import 'package:shuri/models/documento.dart';
 
 class Documentos extends StatelessWidget {
+  final List<Documento> _documentos = [
+    Documento(
+      data: 'Hoje',
+      nome: 'Contrato',
+      horario: '12:00 pm',
+      descricao: 'Compartilhado por Kelvin Garcia',
+    ),
+    Documento(
+      data: 'Ontem',
+      nome: 'Termos de uso',
+      horario: '9:00 pm',
+      descricao: 'Compartilhado por Kelvin Garcia',
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,30 +78,27 @@ class Documentos extends StatelessWidget {
               ],
             ),
           ),
-          ListTile(
-            leading: Icon(Icons.article),
-            title: Text('Contrato'),
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => AguardaDocumento(),
-              ),
-            ),
-          ),
-          ListTile(
-            leading: Icon(Icons.article),
-            title: Text('Termo de aceite'),
-            onTap: () async {
-              var imagem = await TreinaMobileClient.teste();
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Documento(imagem: imagem),
-                ),
+          ListView.builder(
+            shrinkWrap: true,
+            scrollDirection: Axis.vertical,
+            itemCount: _documentos.length,
+            itemBuilder: (context, index) {
+              return DocumentoCard(
+                data: _documentos[index].data,
+                nomeDocumento: _documentos[index].nome,
+                horario: _documentos[index].horario,
+                descricao: _documentos[index].descricao,
               );
             },
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
       ),
     );
   }

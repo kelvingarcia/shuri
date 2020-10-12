@@ -10,7 +10,7 @@ import 'package:shuri/screens/signup/signup_sucesso.dart';
 
 class CameraVideoMobile extends StatefulWidget {
   final CameraDescription camera;
-  TreinaRequest treinaRequest;
+  final TreinaRequest treinaRequest;
 
   CameraVideoMobile({
     Key key,
