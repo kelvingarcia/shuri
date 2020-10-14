@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 import 'package:shuri/http/webclient.dart';
+import 'package:shuri/models/arquivo_pdf.dart';
 import 'package:shuri/models/pessoa_dto.dart';
 import 'package:shuri/models/reconhece_request.dart';
 import 'package:shuri/models/reconhecimento_token.dart';
@@ -28,13 +29,7 @@ class TreinaMobileClient {
   }
 
   static Future<Imagem> teste() async {
-    // var request = await HttpRequest.request('http://localhost:8080/imagem',
-    //     method: 'GET',
-    //     requestHeaders: {
-    //       'Content-Type': 'application/json',
-    //       'Access-Control-Allow-Origin': '*'
-    //     });
-    var request = await client.get('http://192.168.0.5:8087/imagem');
+    var request = await client.get('http://192.168.0.6:8087/imagem');
     final Map<String, dynamic> decodedJson = jsonDecode(request.body);
     String imagemString = decodedJson['imagem'];
     var imagemBytes = base64Decode(imagemString);
@@ -42,18 +37,19 @@ class TreinaMobileClient {
   }
 
   static Future<String> postTeste(ImagemPost imagemPost) async {
-    // var request = await HttpRequest.request(
-    //     'http://localhost:8080/imagemFromFront',
-    //     method: 'POST',
-    //     sendData: jsonEncode(imagemPost.toJson()),
-    //     requestHeaders: {
-    //       'Content-Type': 'application/json',
-    //       'Access-Control-Allow-Origin': '*'
-    //     });
     var request = await client.post(
-      'http://192.168.0.5:8087/imagemFromFront',
+      'http://192.168.0.6:8087/imagemFromFront',
       headers: {'Content-type': 'application/json'},
       body: jsonEncode(imagemPost.toJson()),
+    );
+    return request.body;
+  }
+
+  static Future<String> postArquivo(ArquivoPDF arquivoPDF) async {
+    var request = await client.post(
+      'http://192.168.0.6:8087/mandaArquivo',
+      headers: {'Content-type': 'application/json'},
+      body: jsonEncode(arquivoPDF.toJson()),
     );
     return request.body;
   }

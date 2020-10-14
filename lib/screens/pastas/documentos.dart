@@ -1,9 +1,13 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:shuri/components/barra_superior.dart';
 import 'package:shuri/components/documento_card.dart';
 import 'package:shuri/components/icone_pessoa.dart';
 import 'package:shuri/components/pasta.dart';
 import 'package:shuri/models/documento.dart';
+import 'package:shuri/screens/upload/upload_tela.dart';
 
 class Documentos extends StatelessWidget {
   final List<Documento> _documentos = [
@@ -94,7 +98,22 @@ class Documentos extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () async {
+          FilePickerResult result = await FilePicker.platform.pickFiles();
+
+          if (result != null) {
+            File file = File(result.files.single.path);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => UploadTela(
+                  titulo: file.path.split('/').last.split('.').first,
+                  arquivo: file,
+                ),
+              ),
+            );
+          }
+        },
         child: Icon(
           Icons.add,
           color: Colors.white,

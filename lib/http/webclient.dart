@@ -7,4 +7,4 @@ final Client client = HttpClientWithInterceptor.build(
   interceptors: [LoggingInterceptor()],
 );
 
-const String baseUrl = 'http://192.168.0.5:8080/';
+const String baseUrl = 'http://192.168.0.6:8080/';

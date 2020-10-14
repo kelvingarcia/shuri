@@ -14,7 +14,14 @@ class BarraSuperior extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Icon(voltar ? Icons.arrow_back : Icons.crop_square),
+          InkWell(
+            child: Icon(voltar ? Icons.arrow_back : Icons.crop_square),
+            onTap: () {
+              if (voltar) {
+                Navigator.pop(context);
+              }
+            },
+          ),
           IconePessoa(texto: textoPessoa),
         ],
       ),
