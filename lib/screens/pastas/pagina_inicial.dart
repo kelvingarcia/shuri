@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shuri/components/barra_superior.dart';
 import 'package:shuri/components/pasta.dart';
+import 'package:shuri/http/webclients/treina_mobileclient.dart';
+import 'package:shuri/models/pasta_reponse.dart';
 import 'package:shuri/screens/pastas/nova_pasta.dart';
 
 import 'documentos.dart';
@@ -11,8 +13,6 @@ class PaginaInicial extends StatefulWidget {
 }
 
 class _PaginaInicialState extends State<PaginaInicial> {
-  List<String> _pastas = ['Contratação'];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,20 +22,50 @@ class _PaginaInicialState extends State<PaginaInicial> {
             textoPessoa: 'K',
             voltar: false,
           ),
-          ListView.builder(
-            shrinkWrap: true,
-            scrollDirection: Axis.vertical,
-            itemCount: _pastas.length,
-            itemBuilder: (context, index) {
-              return Pasta(
-                nomePasta: _pastas[index],
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Documentos(),
-                  ),
-                ),
-              );
+          FutureBuilder<List<PastaResponse>>(
+            future: TreinaMobileClient.listaDePastas(),
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                  return Container();
+                  break;
+                case ConnectionState.waiting:
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        CircularProgressIndicator(),
+                        Text('Aguarde...')
+                      ],
+                    ),
+                  );
+                  break;
+                case ConnectionState.active:
+                  break;
+                case ConnectionState.done:
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (context, index) {
+                        return Pasta(
+                          nomePasta: snapshot.data[index].nomePasta,
+                          descricao: snapshot.data[index].descricao,
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Documentos(),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }
+                  break;
+              }
+              return Container();
             },
           ),
         ],
@@ -52,11 +82,6 @@ class _PaginaInicialState extends State<PaginaInicial> {
               builder: (context) => NovaPasta(),
             ),
           );
-          if (novaPasta != null) {
-            setState(() {
-              _pastas.add(novaPasta);
-            });
-          }
         },
       ),
       bottomNavigationBar: Container(

@@ -38,6 +38,7 @@ class _DocumentosState extends State<Documentos> {
             padding: const EdgeInsets.only(top: 16.0),
             child: Pasta(
               nomePasta: 'Contratação',
+              descricao: 'descrição',
               onPressed: () {},
               divider: false,
             ),

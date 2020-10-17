@@ -11,4 +11,9 @@ class PessoaDTO {
         nome = json['nome'],
         email = json['email'],
         classe = json['classe'];
+
+  @override
+  String toString() {
+    return 'PessoaDTO[id=$id, nome=$nome, email=$email, classe=$classe]';
+  }
 }

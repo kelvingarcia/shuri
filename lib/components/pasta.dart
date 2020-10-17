@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 
 class Pasta extends StatelessWidget {
   final String nomePasta;
+  final String descricao;
   final Function onPressed;
   final bool divider;
 
-  Pasta(
-      {@required this.nomePasta,
-      @required this.onPressed,
-      this.divider = true});
+  Pasta({
+    @required this.nomePasta,
+    @required this.onPressed,
+    @required this.descricao,
+    this.divider = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +40,7 @@ class Pasta extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Text('Descrição'),
+                      Text(descricao),
                     ],
                   ),
                 ),

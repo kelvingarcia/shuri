@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shuri/http/webclient.dart';
 import 'package:shuri/models/arquivo_pdf.dart';
+import 'package:shuri/models/pasta_reponse.dart';
 import 'package:shuri/models/pessoa_dto.dart';
 import 'package:shuri/models/reconhece_request.dart';
 import 'package:shuri/models/reconhecimento_token.dart';
@@ -25,7 +27,10 @@ class TreinaMobileClient {
         headers: {'Content-type': 'application/json'},
         body: jsonEncode(reconheceRequest.toJson()));
     final Map<String, dynamic> decodedJson = jsonDecode(response.body);
-    return ReconhecimentoToken.fromJson(decodedJson);
+    var reconhecimentoToken = ReconhecimentoToken.fromJson(decodedJson);
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('token', reconhecimentoToken.token);
+    return reconhecimentoToken;
   }
 
   static Future<Imagem> teste(String nomeArquivo) async {
@@ -53,5 +58,32 @@ class TreinaMobileClient {
       body: jsonEncode(arquivoPDF.toJson()),
     );
     return request.body;
+  }
+
+  static Future<List<PastaResponse>> listaDePastas() async {
+    var prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    var response = await client.get(
+      baseUrl + 'listaDePastas',
+      headers: {
+        'Authorization': token,
+      },
+    );
+    List<dynamic> listaPastas = jsonDecode(response.body);
+    return listaPastas
+        .map((element) => PastaResponse.fromJson(element))
+        .toList();
+  }
+
+  static Future<PessoaDTO> usuarioLogado() async {
+    var prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    var response = await client.get(
+      baseUrl + 'usuarioLogado',
+      headers: {
+        'Authorization': token,
+      },
+    );
+    return PessoaDTO.fromJson(jsonDecode(response.body));
   }
 }
