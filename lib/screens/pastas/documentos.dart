@@ -7,21 +7,21 @@ import 'package:shuri/components/documento_card.dart';
 import 'package:shuri/components/icone_pessoa.dart';
 import 'package:shuri/components/pasta.dart';
 import 'package:shuri/models/documento.dart';
+import 'package:shuri/screens/documento/aguarda_documento.dart';
 import 'package:shuri/screens/upload/upload_tela.dart';
 
-class Documentos extends StatelessWidget {
+class Documentos extends StatefulWidget {
+  @override
+  _DocumentosState createState() => _DocumentosState();
+}
+
+class _DocumentosState extends State<Documentos> {
   final List<Documento> _documentos = [
     Documento(
       data: 'Hoje',
       nome: 'Contrato',
       horario: '12:00 pm',
-      descricao: 'Compartilhado por Kelvin Garcia',
-    ),
-    Documento(
-      data: 'Ontem',
-      nome: 'Termos de uso',
-      horario: '9:00 pm',
-      descricao: 'Compartilhado por Kelvin Garcia',
+      descricao: 'Compartilhado por Kelvin',
     ),
   ];
 
@@ -87,11 +87,21 @@ class Documentos extends StatelessWidget {
             scrollDirection: Axis.vertical,
             itemCount: _documentos.length,
             itemBuilder: (context, index) {
-              return DocumentoCard(
-                data: _documentos[index].data,
-                nomeDocumento: _documentos[index].nome,
-                horario: _documentos[index].horario,
-                descricao: _documentos[index].descricao,
+              return InkWell(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AguardaDocumento(
+                      nomeArquivo: _documentos[index].nome,
+                    ),
+                  ),
+                ),
+                child: DocumentoCard(
+                  data: _documentos[index].data,
+                  nomeDocumento: _documentos[index].nome,
+                  horario: _documentos[index].horario,
+                  descricao: _documentos[index].descricao,
+                ),
               );
             },
           ),
@@ -103,7 +113,7 @@ class Documentos extends StatelessWidget {
 
           if (result != null) {
             File file = File(result.files.single.path);
-            Navigator.push(
+            var novoDocumento = await Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => UploadTela(
@@ -112,6 +122,18 @@ class Documentos extends StatelessWidget {
                 ),
               ),
             );
+            if (novoDocumento != null) {
+              setState(() {
+                _documentos.add(
+                  Documento(
+                    data: 'Hoje',
+                    nome: novoDocumento,
+                    horario: '12:00 pm',
+                    descricao: 'Compartilhado por Kelvin',
+                  ),
+                );
+              });
+            }
           }
         },
         child: Icon(

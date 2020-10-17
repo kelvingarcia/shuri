@@ -111,12 +111,13 @@ class _UploadTelaState extends State<UploadTela> {
                           final resultado =
                               await TreinaMobileClient.postArquivo(
                             ArquivoPDF(
+                              _nomeController.text,
                               base64.encode(
                                 widget.arquivo.readAsBytesSync(),
                               ),
                             ),
                           );
-                          debugPrint(resultado);
+                          Navigator.pop(context, _nomeController.text);
                         },
                         child: Text('Fazer upload'),
                       ),

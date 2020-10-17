@@ -56,7 +56,6 @@ class DocumentoCard extends StatelessWidget {
                     ),
                     Text(
                       descricao,
-                      style: TextStyle(),
                     ),
                   ],
                 ),

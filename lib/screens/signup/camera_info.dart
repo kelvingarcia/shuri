@@ -43,7 +43,6 @@ class CameraInfo extends StatelessWidget {
               ),
             ),
             RaisedButton(
-              color: Colors.blue,
               onPressed: () async {
                 // Obtain a list of the available cameras on the device.
                 final cameras = await availableCameras();

@@ -28,12 +28,13 @@ class TreinaMobileClient {
     return ReconhecimentoToken.fromJson(decodedJson);
   }
 
-  static Future<Imagem> teste() async {
-    var request = await client.get('http://192.168.0.6:8087/imagem');
+  static Future<Imagem> teste(String nomeArquivo) async {
+    var request =
+        await client.get('http://192.168.0.6:8087/testaImagem/' + nomeArquivo);
     final Map<String, dynamic> decodedJson = jsonDecode(request.body);
     String imagemString = decodedJson['imagem'];
     var imagemBytes = base64Decode(imagemString);
-    return Imagem(imagemBytes);
+    return Imagem(decodedJson['nome'], imagemBytes);
   }
 
   static Future<String> postTeste(ImagemPost imagemPost) async {

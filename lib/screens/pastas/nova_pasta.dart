@@ -95,7 +95,6 @@ class _NovaPastaState extends State<NovaPasta> {
                   ),
                 ),
                 RaisedButton(
-                  color: Colors.blue,
                   onPressed: () =>
                       Navigator.pop(context, _pastaController.text),
                   child: Text(

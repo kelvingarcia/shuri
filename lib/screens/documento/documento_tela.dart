@@ -134,7 +134,8 @@ class _DocumentoTelaState extends State<DocumentoTela> {
       print(pngBytes);
       print(bs64);
       setState(() {});
-      var s = await TreinaMobileClient.postTeste(ImagemPost(bs64));
+      var s = await TreinaMobileClient.postTeste(
+          ImagemPost(widget.imagem.nome, bs64));
       print(s);
     } catch (e) {
       print(e);
@@ -314,17 +315,22 @@ class _AssinaturaState extends State<Assinatura> {
 }
 
 class Imagem {
+  final String nome;
   final Uint8List imagem;
 
-  Imagem(this.imagem);
+  Imagem(this.nome, this.imagem);
 }
 
 class ImagemPost {
+  final String nome;
   final String imagem;
 
-  ImagemPost(this.imagem);
+  ImagemPost(this.nome, this.imagem);
 
-  Map<String, dynamic> toJson() => {'imagem': imagem};
+  Map<String, dynamic> toJson() => {
+        'nome': nome,
+        'imagem': imagem,
+      };
 }
 
 class Signature extends CustomPainter {

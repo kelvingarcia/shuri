@@ -3,6 +3,10 @@ import 'package:shuri/http/webclients/treina_mobileclient.dart';
 import 'package:shuri/screens/documento/documento_tela.dart';
 
 class AguardaDocumento extends StatefulWidget {
+  final String nomeArquivo;
+
+  AguardaDocumento({@required this.nomeArquivo});
+
   @override
   _AguardaDocumentoState createState() => _AguardaDocumentoState();
 }
@@ -15,7 +19,7 @@ class _AguardaDocumentoState extends State<AguardaDocumento> {
         title: Text('Documento'),
       ),
       body: FutureBuilder<Imagem>(
-        future: TreinaMobileClient.teste(),
+        future: TreinaMobileClient.teste(widget.nomeArquivo),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:

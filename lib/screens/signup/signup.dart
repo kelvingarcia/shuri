@@ -54,7 +54,6 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ),
                   RaisedButton(
-                    color: Colors.blue,
                     onPressed: () {
                       var treinaRequest = TreinaRequest(
                           nome: _nomeController.text,

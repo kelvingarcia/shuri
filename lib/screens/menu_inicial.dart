@@ -16,7 +16,7 @@ class MenuInicial extends StatelessWidget {
             BotaoRedondo(
               icon: Icon(Icons.verified_user_sharp),
               text: 'Cadastre-se',
-              fontSize: 20.0,
+              fontSize: 16.0,
               onPressed: () => Navigator.push(
                 context,
                 MaterialPageRoute(

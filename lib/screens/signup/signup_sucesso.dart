@@ -30,7 +30,7 @@ class _SignUpSucessoState extends State<SignUpSucesso> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     CircularProgressIndicator(),
-                    Text('Loading')
+                    Text('Cadastrando...')
                   ],
                 ),
               );
@@ -64,7 +64,6 @@ class _SignUpSucessoState extends State<SignUpSucesso> {
                           ),
                           RaisedButton(
                             child: Text('Voltar para o menu'),
-                            color: Colors.blue,
                             onPressed: () => Navigator.push(
                               context,
                               MaterialPageRoute(
