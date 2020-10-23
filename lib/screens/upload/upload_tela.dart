@@ -108,8 +108,7 @@ class _UploadTelaState extends State<UploadTela> {
                     Center(
                       child: RaisedButton(
                         onPressed: () async {
-                          final resultado =
-                              await TreinaMobileClient.postArquivo(
+                          await TreinaMobileClient.postArquivo(
                             ArquivoPDF(
                               _nomeController.text,
                               base64.encode(

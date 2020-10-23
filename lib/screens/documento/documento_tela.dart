@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'dart:ui' as ui;
 
 import 'package:shuri/http/webclients/treina_mobileclient.dart';
+import 'package:shuri/screens/sucesso/tela_sucesso.dart';
 
 class DocumentoTela extends StatefulWidget {
   final Imagem imagem;
@@ -121,6 +122,21 @@ class _DocumentoTelaState extends State<DocumentoTela> {
   }
 
   void _capturePng() async {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              CircularProgressIndicator(),
+              Text('Enviando documento'),
+            ],
+          ),
+        );
+      },
+    );
     try {
       print('inside');
       RenderRepaintBoundary boundary =
@@ -136,7 +152,19 @@ class _DocumentoTelaState extends State<DocumentoTela> {
       setState(() {});
       var s = await TreinaMobileClient.postTeste(
           ImagemPost(widget.imagem.nome, bs64));
-      print(s);
+      if (s == 'Deu certo') {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TelaSucesso(
+              mensagem: 'Documento enviado com sucesso',
+              textoBotoes: [],
+              funcaoBotoes: [],
+            ),
+          ),
+        );
+        Navigator.pop(context);
+      }
     } catch (e) {
       print(e);
     }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shuri/http/webclients/treina_mobileclient.dart';
+import 'package:shuri/models/pasta_dto.dart';
 
 class NovaPasta extends StatefulWidget {
   @override
@@ -9,6 +11,7 @@ class _NovaPastaState extends State<NovaPasta> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _usuariosController = TextEditingController();
   final TextEditingController _pastaController = TextEditingController();
+  final TextEditingController _descricaoController = TextEditingController();
   List<String> _usuarios = List();
 
   @override
@@ -40,6 +43,20 @@ class _NovaPastaState extends State<NovaPasta> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    controller: _descricaoController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.black,
+                        ),
+                      ),
+                      labelText: 'Descrição',
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
@@ -61,7 +78,7 @@ class _NovaPastaState extends State<NovaPasta> {
                         Padding(
                           padding: const EdgeInsets.only(left: 8.0),
                           child: FlatButton(
-                            onPressed: () {
+                            onPressed: () async {
                               setState(() {
                                 _usuarios.add(_usuariosController.text);
                                 _usuariosController.text = '';
@@ -95,8 +112,17 @@ class _NovaPastaState extends State<NovaPasta> {
                   ),
                 ),
                 RaisedButton(
-                  onPressed: () =>
-                      Navigator.pop(context, _pastaController.text),
+                  onPressed: () async {
+                    var pastaResponse = await TreinaMobileClient.criaNovaPasta(
+                      PastaDTO(
+                        _pastaController.text,
+                        _descricaoController.text,
+                        _usuarios,
+                      ),
+                    );
+                    debugPrint(pastaResponse.toString());
+                    Navigator.pop(context);
+                  },
                   child: Text(
                     'Prosseguir',
                     style: TextStyle(

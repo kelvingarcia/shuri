@@ -11,19 +11,20 @@ import 'package:shuri/screens/documento/aguarda_documento.dart';
 import 'package:shuri/screens/upload/upload_tela.dart';
 
 class Documentos extends StatefulWidget {
+  final String nomePasta;
+  final String descricao;
+
+  Documentos({
+    @required this.nomePasta,
+    @required this.descricao,
+  });
+
   @override
   _DocumentosState createState() => _DocumentosState();
 }
 
 class _DocumentosState extends State<Documentos> {
-  final List<Documento> _documentos = [
-    Documento(
-      data: 'Hoje',
-      nome: 'Contrato',
-      horario: '12:00 pm',
-      descricao: 'Compartilhado por Kelvin',
-    ),
-  ];
+  final List<Documento> _documentos = List();
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +38,8 @@ class _DocumentosState extends State<Documentos> {
           Padding(
             padding: const EdgeInsets.only(top: 16.0),
             child: Pasta(
-              nomePasta: 'Contratação',
-              descricao: 'descrição',
+              nomePasta: widget.nomePasta,
+              descricao: widget.descricao,
               onPressed: () {},
               divider: false,
             ),
@@ -62,7 +63,7 @@ class _DocumentosState extends State<Documentos> {
                       Padding(
                         padding: const EdgeInsets.only(right: 8.0),
                         child: IconePessoa(
-                          texto: 'G',
+                          texto: 'K',
                         ),
                       ),
                       Padding(
@@ -74,7 +75,7 @@ class _DocumentosState extends State<Documentos> {
                       Padding(
                         padding: const EdgeInsets.only(right: 8.0),
                         child: IconePessoa(
-                          texto: 'G',
+                          texto: 'W',
                         ),
                       ),
                     ],

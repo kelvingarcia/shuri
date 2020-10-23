@@ -4,7 +4,9 @@ import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shuri/http/webclient.dart';
 import 'package:shuri/models/arquivo_pdf.dart';
+import 'package:shuri/models/pasta_dto.dart';
 import 'package:shuri/models/pasta_reponse.dart';
+import 'package:shuri/models/pessoa.dart';
 import 'package:shuri/models/pessoa_dto.dart';
 import 'package:shuri/models/reconhece_request.dart';
 import 'package:shuri/models/reconhecimento_token.dart';
@@ -33,9 +35,21 @@ class TreinaMobileClient {
     return reconhecimentoToken;
   }
 
+  static Future<PastaResponse> criaNovaPasta(PastaDTO pastaDTO) async {
+    var prefs = await SharedPreferences.getInstance();
+    var response = await client.post(baseUrl + 'pasta',
+        headers: {
+          'Content-type': 'application/json',
+          'Authorization': prefs.getString('token'),
+        },
+        body: jsonEncode(pastaDTO.toJson()));
+    final Map<String, dynamic> decodedJson = jsonDecode(response.body);
+    return PastaResponse.fromJson(decodedJson);
+  }
+
   static Future<Imagem> teste(String nomeArquivo) async {
     var request =
-        await client.get('http://192.168.0.6:8087/testaImagem/' + nomeArquivo);
+        await client.get('http://192.168.0.3:8087/testaImagem/' + nomeArquivo);
     final Map<String, dynamic> decodedJson = jsonDecode(request.body);
     String imagemString = decodedJson['imagem'];
     var imagemBytes = base64Decode(imagemString);
@@ -44,7 +58,7 @@ class TreinaMobileClient {
 
   static Future<String> postTeste(ImagemPost imagemPost) async {
     var request = await client.post(
-      'http://192.168.0.6:8087/imagemFromFront',
+      'http://192.168.0.3:8087/imagemFromFront',
       headers: {'Content-type': 'application/json'},
       body: jsonEncode(imagemPost.toJson()),
     );
@@ -53,7 +67,7 @@ class TreinaMobileClient {
 
   static Future<String> postArquivo(ArquivoPDF arquivoPDF) async {
     var request = await client.post(
-      'http://192.168.0.6:8087/mandaArquivo',
+      'http://192.168.0.3:8087/mandaArquivo',
       headers: {'Content-type': 'application/json'},
       body: jsonEncode(arquivoPDF.toJson()),
     );
@@ -85,5 +99,17 @@ class TreinaMobileClient {
       },
     );
     return PessoaDTO.fromJson(jsonDecode(response.body));
+  }
+
+  static Future<Pessoa> buscaPorEmail(String email) async {
+    var prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    var response = await client.get(
+      baseUrl + 'buscaPorEmail/' + email,
+      headers: {
+        'Authorization': token,
+      },
+    );
+    return Pessoa.fromJson(jsonDecode(response.body));
   }
 }

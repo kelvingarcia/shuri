@@ -45,22 +45,27 @@ class _PaginaInicialState extends State<PaginaInicial> {
                   break;
                 case ConnectionState.done:
                   if (snapshot.hasData) {
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      itemCount: snapshot.data.length,
-                      itemBuilder: (context, index) {
-                        return Pasta(
-                          nomePasta: snapshot.data[index].nomePasta,
-                          descricao: snapshot.data[index].descricao,
-                          onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Documentos(),
+                    return Expanded(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (context, index) {
+                          return Pasta(
+                            nomePasta: snapshot.data[index].nomePasta,
+                            descricao: snapshot.data[index].descricao,
+                            onPressed: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Documentos(
+                                  nomePasta: snapshot.data[index].nomePasta,
+                                  descricao: snapshot.data[index].descricao,
+                                ),
+                              ),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     );
                   }
                   break;
@@ -76,12 +81,13 @@ class _PaginaInicialState extends State<PaginaInicial> {
           color: Colors.white,
         ),
         onPressed: () async {
-          final String novaPasta = await Navigator.push(
+          await Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => NovaPasta(),
             ),
           );
+          setState(() {});
         },
       ),
       bottomNavigationBar: Container(
