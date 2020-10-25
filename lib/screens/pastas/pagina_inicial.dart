@@ -58,6 +58,7 @@ class _PaginaInicialState extends State<PaginaInicial> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => Documentos(
+                                  idPasta: snapshot.data[index].id,
                                   nomePasta: snapshot.data[index].nomePasta,
                                   descricao: snapshot.data[index].descricao,
                                 ),

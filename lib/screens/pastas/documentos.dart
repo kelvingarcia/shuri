@@ -11,10 +11,12 @@ import 'package:shuri/screens/documento/aguarda_documento.dart';
 import 'package:shuri/screens/upload/upload_tela.dart';
 
 class Documentos extends StatefulWidget {
+  final String idPasta;
   final String nomePasta;
   final String descricao;
 
   Documentos({
+    @required this.idPasta,
     @required this.nomePasta,
     @required this.descricao,
   });
@@ -119,6 +121,7 @@ class _DocumentosState extends State<Documentos> {
               context,
               MaterialPageRoute(
                 builder: (context) => UploadTela(
+                  idPasta: widget.idPasta,
                   titulo: file.path.split('/').last.split('.').first,
                   arquivo: file,
                 ),
@@ -130,7 +133,9 @@ class _DocumentosState extends State<Documentos> {
                   Documento(
                     data: 'Hoje',
                     nome: novoDocumento,
-                    horario: '12:00 pm',
+                    horario: DateTime.now().hour.toString() +
+                        ':' +
+                        DateTime.now().minute.toString(),
                     descricao: 'Compartilhado por Kelvin',
                   ),
                 );

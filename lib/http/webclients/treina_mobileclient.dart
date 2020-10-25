@@ -66,9 +66,14 @@ class TreinaMobileClient {
   }
 
   static Future<String> postArquivo(ArquivoPDF arquivoPDF) async {
+    var prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
     var request = await client.post(
-      'http://192.168.0.3:8087/mandaArquivo',
-      headers: {'Content-type': 'application/json'},
+      'http://192.168.0.3:8080/documento',
+      headers: {
+        'Content-type': 'application/json',
+        'Authorization': token,
+      },
       body: jsonEncode(arquivoPDF.toJson()),
     );
     return request.body;

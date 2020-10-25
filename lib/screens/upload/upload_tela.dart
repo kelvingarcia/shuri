@@ -7,10 +7,12 @@ import 'package:shuri/http/webclients/treina_mobileclient.dart';
 import 'package:shuri/models/arquivo_pdf.dart';
 
 class UploadTela extends StatefulWidget {
+  final String idPasta;
   final String titulo;
   final File arquivo;
 
   UploadTela({
+    @required this.idPasta,
     @required this.titulo,
     @required this.arquivo,
   });
@@ -108,14 +110,16 @@ class _UploadTelaState extends State<UploadTela> {
                     Center(
                       child: RaisedButton(
                         onPressed: () async {
-                          await TreinaMobileClient.postArquivo(
+                          var response = await TreinaMobileClient.postArquivo(
                             ArquivoPDF(
                               _nomeController.text,
                               base64.encode(
                                 widget.arquivo.readAsBytesSync(),
                               ),
+                              widget.idPasta,
                             ),
                           );
+                          debugPrint(response);
                           Navigator.pop(context, _nomeController.text);
                         },
                         child: Text('Fazer upload'),

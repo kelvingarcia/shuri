@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shuri/screens/menu_inicial.dart';
-import 'package:shuri/screens/pastas/documentos.dart';
-import 'package:shuri/screens/sucesso/tela_sucesso.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
