@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:shuri/http/webclients/treina_mobileclient.dart';
 import 'package:shuri/screens/menu_inicial.dart';
+import 'package:shuri/screens/pastas/pagina_inicial.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await TreinaMobileClient.reconhecePessoaTeste();
   runApp(MyApp());
 }
 
@@ -18,7 +21,7 @@ class MyApp extends StatelessWidget {
         accentColor: Color.fromRGBO(255, 150, 0, 1),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MenuInicial(),
+      home: PaginaInicial(),
     );
   }
 }

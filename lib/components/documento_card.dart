@@ -30,7 +30,7 @@ class DocumentoCard extends StatelessWidget {
                 style: TextStyle(fontSize: 16.0),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 24.0),
+                padding: const EdgeInsets.only(left: 4.0),
                 child: Icon(
                   Icons.article,
                   size: 80.0,

@@ -6,12 +6,13 @@ import 'package:flutter/rendering.dart';
 import 'dart:ui' as ui;
 
 import 'package:shuri/http/webclients/treina_mobileclient.dart';
+import 'package:shuri/models/paginas.dart';
 import 'package:shuri/screens/sucesso/tela_sucesso.dart';
 
 class DocumentoTela extends StatefulWidget {
-  final Imagem imagem;
+  final Paginas paginas;
 
-  DocumentoTela({Key key, this.imagem}) : super(key: key);
+  DocumentoTela({Key key, this.paginas}) : super(key: key);
 
   @override
   _DocumentoTelaState createState() => _DocumentoTelaState();
@@ -150,8 +151,7 @@ class _DocumentoTelaState extends State<DocumentoTela> {
       print(pngBytes);
       print(bs64);
       setState(() {});
-      var s = await TreinaMobileClient.postTeste(
-          ImagemPost(widget.imagem.nome, bs64));
+      var s = await TreinaMobileClient.postTeste(ImagemPost('Teste', bs64));
       if (s == 'Deu certo') {
         await Navigator.push(
           context,
@@ -208,7 +208,14 @@ class _DocumentoTelaState extends State<DocumentoTela> {
                     navegarParaAssinatura();
                   }
                 },
-                child: Image.memory(widget.imagem.imagem),
+                child: ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: widget.paginas.arquivo.length,
+                  itemBuilder: (context, index) {
+                    return Image.memory(widget.paginas.arquivo[index]);
+                  },
+                ),
               ),
               Positioned(
                 top: yPosition,

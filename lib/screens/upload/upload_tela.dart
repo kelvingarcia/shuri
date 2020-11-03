@@ -112,15 +112,15 @@ class _UploadTelaState extends State<UploadTela> {
                         onPressed: () async {
                           var response = await TreinaMobileClient.postArquivo(
                             ArquivoPDF(
-                              _nomeController.text,
-                              base64.encode(
+                              nome: _nomeController.text,
+                              arquivo: base64.encode(
                                 widget.arquivo.readAsBytesSync(),
                               ),
-                              widget.idPasta,
+                              idPasta: widget.idPasta,
                             ),
                           );
                           debugPrint(response);
-                          Navigator.pop(context, _nomeController.text);
+                          Navigator.pop(context);
                         },
                         child: Text('Fazer upload'),
                       ),

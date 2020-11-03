@@ -4,6 +4,9 @@ import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shuri/http/webclient.dart';
 import 'package:shuri/models/arquivo_pdf.dart';
+import 'package:shuri/models/documento_dto.dart';
+import 'package:shuri/models/imagem_arquivo.dart';
+import 'package:shuri/models/paginas.dart';
 import 'package:shuri/models/pasta_dto.dart';
 import 'package:shuri/models/pasta_reponse.dart';
 import 'package:shuri/models/pessoa.dart';
@@ -32,6 +35,28 @@ class TreinaMobileClient {
     var reconhecimentoToken = ReconhecimentoToken.fromJson(decodedJson);
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('token', reconhecimentoToken.token);
+    prefs.setString(
+      'nomeUsuario',
+      reconhecimentoToken.reconhecimento.pessoa.nome,
+    );
+    return reconhecimentoToken;
+  }
+
+  static Future<ReconhecimentoToken> reconhecePessoaTeste() async {
+    final Response response = await client.get(
+      baseUrl + 'reconhecePessoaTeste',
+      headers: {
+        'Content-type': 'application/json',
+      },
+    );
+    final Map<String, dynamic> decodedJson = jsonDecode(response.body);
+    var reconhecimentoToken = ReconhecimentoToken.fromJson(decodedJson);
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('token', reconhecimentoToken.token);
+    prefs.setString(
+      'nomeUsuario',
+      reconhecimentoToken.reconhecimento.pessoa.nome,
+    );
     return reconhecimentoToken;
   }
 
@@ -56,6 +81,23 @@ class TreinaMobileClient {
     return Imagem(decodedJson['nome'], imagemBytes);
   }
 
+  static Future<Paginas> getDocumentoArquivo(String nomeArquivo) async {
+    var prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    var request = await client.get(
+      baseUrl + 'documentoArquivo/' + nomeArquivo,
+      headers: {
+        'Authorization': token,
+      },
+    );
+    final Map<String, dynamic> decodedJson = jsonDecode(request.body);
+    List<dynamic> arquivoDynamic = decodedJson['arquivo'];
+    var arquivoImagens =
+        arquivoDynamic.map((e) => ImagemArquivo.fromJson(e)).toList();
+    var arquivo = arquivoImagens.map((e) => base64Decode(e.arquivo)).toList();
+    return Paginas(arquivo);
+  }
+
   static Future<String> postTeste(ImagemPost imagemPost) async {
     var request = await client.post(
       'http://192.168.0.3:8087/imagemFromFront',
@@ -68,8 +110,10 @@ class TreinaMobileClient {
   static Future<String> postArquivo(ArquivoPDF arquivoPDF) async {
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
+    var nome = prefs.getString('nomeUsuario');
+    arquivoPDF.descricao = 'Compartilhado por ' + nome;
     var request = await client.post(
-      'http://192.168.0.3:8080/documento',
+      baseUrl + 'documento',
       headers: {
         'Content-type': 'application/json',
         'Authorization': token,
@@ -116,5 +160,18 @@ class TreinaMobileClient {
       },
     );
     return Pessoa.fromJson(jsonDecode(response.body));
+  }
+
+  static Future<List<DocumentoDTO>> documentosNaPasta(String idPasta) async {
+    var prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    var response = await client.get(
+      baseUrl + 'documentosNaPasta/' + idPasta,
+      headers: {
+        'Authorization': token,
+      },
+    );
+    List<dynamic> listaDocs = jsonDecode(response.body);
+    return listaDocs.map((element) => DocumentoDTO.fromJson(element)).toList();
   }
 }

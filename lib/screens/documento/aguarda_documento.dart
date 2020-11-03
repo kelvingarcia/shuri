@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shuri/http/webclients/treina_mobileclient.dart';
+import 'package:shuri/models/paginas.dart';
 import 'package:shuri/screens/documento/documento_tela.dart';
 
 class AguardaDocumento extends StatefulWidget {
@@ -18,8 +19,8 @@ class _AguardaDocumentoState extends State<AguardaDocumento> {
       appBar: AppBar(
         title: Text('Documento'),
       ),
-      body: FutureBuilder<Imagem>(
-        future: TreinaMobileClient.teste(widget.nomeArquivo),
+      body: FutureBuilder<Paginas>(
+        future: TreinaMobileClient.getDocumentoArquivo(widget.nomeArquivo),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
@@ -44,7 +45,7 @@ class _AguardaDocumentoState extends State<AguardaDocumento> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => DocumentoTela(
-                      imagem: snapshot.data,
+                      paginas: snapshot.data,
                     ),
                   ),
                 ).then((value) {

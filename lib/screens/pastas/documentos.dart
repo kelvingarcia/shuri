@@ -6,7 +6,9 @@ import 'package:shuri/components/barra_superior.dart';
 import 'package:shuri/components/documento_card.dart';
 import 'package:shuri/components/icone_pessoa.dart';
 import 'package:shuri/components/pasta.dart';
-import 'package:shuri/models/documento.dart';
+import 'package:shuri/http/webclients/treina_mobileclient.dart';
+import 'package:shuri/models/arquivo_pdf.dart';
+import 'package:shuri/models/documento_dto.dart';
 import 'package:shuri/screens/documento/aguarda_documento.dart';
 import 'package:shuri/screens/upload/upload_tela.dart';
 
@@ -26,8 +28,6 @@ class Documentos extends StatefulWidget {
 }
 
 class _DocumentosState extends State<Documentos> {
-  final List<Documento> _documentos = List();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,27 +86,60 @@ class _DocumentosState extends State<Documentos> {
               ],
             ),
           ),
-          ListView.builder(
-            shrinkWrap: true,
-            scrollDirection: Axis.vertical,
-            itemCount: _documentos.length,
-            itemBuilder: (context, index) {
-              return InkWell(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AguardaDocumento(
-                      nomeArquivo: _documentos[index].nome,
+          FutureBuilder<List<DocumentoDTO>>(
+            future: TreinaMobileClient.documentosNaPasta(widget.idPasta),
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                  return Container();
+                  break;
+                case ConnectionState.waiting:
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        CircularProgressIndicator(),
+                        Text('Aguarde...')
+                      ],
                     ),
-                  ),
-                ),
-                child: DocumentoCard(
-                  data: _documentos[index].data,
-                  nomeDocumento: _documentos[index].nome,
-                  horario: _documentos[index].horario,
-                  descricao: _documentos[index].descricao,
-                ),
-              );
+                  );
+                  break;
+                case ConnectionState.active:
+                  break;
+                case ConnectionState.done:
+                  if (snapshot.hasData) {
+                    return Expanded(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (context, index) {
+                          return InkWell(
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AguardaDocumento(
+                                  nomeArquivo: snapshot.data[index].id,
+                                ),
+                              ),
+                            ),
+                            child: DocumentoCard(
+                              data:
+                                  snapshot.data[index].dataHora.substring(0, 5),
+                              nomeDocumento: snapshot.data[index].nome ?? '',
+                              horario:
+                                  snapshot.data[index].dataHora.substring(11),
+                              descricao: snapshot.data[index].descricao ?? '',
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  }
+                  break;
+              }
+              return Container();
             },
           ),
         ],
@@ -117,7 +150,7 @@ class _DocumentosState extends State<Documentos> {
 
           if (result != null) {
             File file = File(result.files.single.path);
-            var novoDocumento = await Navigator.push(
+            await Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => UploadTela(
@@ -127,20 +160,7 @@ class _DocumentosState extends State<Documentos> {
                 ),
               ),
             );
-            if (novoDocumento != null) {
-              setState(() {
-                _documentos.add(
-                  Documento(
-                    data: 'Hoje',
-                    nome: novoDocumento,
-                    horario: DateTime.now().hour.toString() +
-                        ':' +
-                        DateTime.now().minute.toString(),
-                    descricao: 'Compartilhado por Kelvin',
-                  ),
-                );
-              });
-            }
+            setState(() {});
           }
         },
         child: Icon(
