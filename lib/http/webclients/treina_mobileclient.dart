@@ -72,14 +72,14 @@ class TreinaMobileClient {
     return PastaResponse.fromJson(decodedJson);
   }
 
-  static Future<Imagem> teste(String nomeArquivo) async {
-    var request =
-        await client.get('http://192.168.0.3:8087/testaImagem/' + nomeArquivo);
-    final Map<String, dynamic> decodedJson = jsonDecode(request.body);
-    String imagemString = decodedJson['imagem'];
-    var imagemBytes = base64Decode(imagemString);
-    return Imagem(decodedJson['nome'], imagemBytes);
-  }
+  // static Future<Imagem> teste(String nomeArquivo) async {
+  //   var request =
+  //       await client.get('http://192.168.0.3:8087/testaImagem/' + nomeArquivo);
+  //   final Map<String, dynamic> decodedJson = jsonDecode(request.body);
+  //   String imagemString = decodedJson['imagem'];
+  //   var imagemBytes = base64Decode(imagemString);
+  //   return Imagem(decodedJson['nome'], imagemBytes);
+  // }
 
   static Future<Paginas> getDocumentoArquivo(String nomeArquivo) async {
     var prefs = await SharedPreferences.getInstance();
@@ -98,14 +98,14 @@ class TreinaMobileClient {
     return Paginas(arquivo);
   }
 
-  static Future<String> postTeste(ImagemPost imagemPost) async {
-    var request = await client.post(
-      'http://192.168.0.3:8087/imagemFromFront',
-      headers: {'Content-type': 'application/json'},
-      body: jsonEncode(imagemPost.toJson()),
-    );
-    return request.body;
-  }
+  // static Future<String> postTeste(ImagemPost imagemPost) async {
+  //   var request = await client.post(
+  //     'http://192.168.0.3:8087/imagemFromFront',
+  //     headers: {'Content-type': 'application/json'},
+  //     body: jsonEncode(imagemPost.toJson()),
+  //   );
+  //   return request.body;
+  // }
 
   static Future<String> postArquivo(ArquivoPDF arquivoPDF) async {
     var prefs = await SharedPreferences.getInstance();
