@@ -9,14 +9,18 @@ class NovaPasta extends StatefulWidget {
 
 class _NovaPastaState extends State<NovaPasta> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController _usuariosController = TextEditingController();
   final TextEditingController _pastaController = TextEditingController();
   final TextEditingController _descricaoController = TextEditingController();
   List<String> _usuarios = List();
+  Widget botaoAdd = Text('ADD');
+  bool erro = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text('Nova pasta'),
       ),
@@ -25,6 +29,7 @@ class _NovaPastaState extends State<NovaPasta> {
         child: Center(
           child: SingleChildScrollView(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('Cadastro'),
                 Padding(
@@ -80,11 +85,30 @@ class _NovaPastaState extends State<NovaPasta> {
                           child: FlatButton(
                             onPressed: () async {
                               setState(() {
-                                _usuarios.add(_usuariosController.text);
-                                _usuariosController.text = '';
+                                botaoAdd = CircularProgressIndicator();
                               });
+                              var pessoa =
+                                  await TreinaMobileClient.buscaPorEmail(
+                                      _usuariosController.text);
+                              if (pessoa != null) {
+                                setState(() {
+                                  botaoAdd = Text('ADD');
+                                  _usuarios.add(_usuariosController.text);
+                                  _usuariosController.text = '';
+                                });
+                              } else {
+                                _scaffoldKey.currentState.showSnackBar(
+                                  SnackBar(
+                                    content: Text('E-mail não encontrado'),
+                                  ),
+                                );
+                                setState(() {
+                                  botaoAdd = Text('ADD');
+                                  erro = true;
+                                });
+                              }
                             },
-                            child: Text('ADD'),
+                            child: botaoAdd,
                           ),
                         ),
                       ],

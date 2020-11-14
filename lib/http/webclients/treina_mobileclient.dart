@@ -154,12 +154,13 @@ class TreinaMobileClient {
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
     var response = await client.get(
-      baseUrl + 'buscaPorEmail/' + email,
+      'http://192.168.0.2:8085/email/' + email,
       headers: {
         'Authorization': token,
       },
     );
-    return Pessoa.fromJson(jsonDecode(response.body));
+    if (response.body != '') return Pessoa.fromJson(jsonDecode(response.body));
+    return null;
   }
 
   static Future<List<DocumentoDTO>> documentosNaPasta(String idPasta) async {

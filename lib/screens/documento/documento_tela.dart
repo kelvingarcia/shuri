@@ -19,10 +19,107 @@ class DocumentoTela extends StatefulWidget {
 }
 
 class _DocumentoTelaState extends State<DocumentoTela> {
+  List<GlobalKey> listaKeys = List();
+
   @override
   void initState() {
     super.initState();
     debugPrint('iniciou tela');
+    widget.paginas.arquivo.forEach((element) {
+      listaKeys.add(GlobalKey());
+    });
+  }
+
+  Future<void> _captureEach(GlobalKey key, List<Uint8List> listaPng) async {
+    Scrollable.ensureVisible(key.currentContext);
+    RenderRepaintBoundary boundary = key.currentContext.findRenderObject();
+    ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+    ByteData byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    var pngBytes = byteData.buffer.asUint8List();
+    listaPng.add(pngBytes);
+  }
+
+  void _capturePng() async {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              CircularProgressIndicator(),
+              Text('Enviando documento'),
+            ],
+          ),
+        );
+      },
+    );
+    try {
+      print('inside');
+      // Scrollable.ensureVisible(listaKeys.last.currentContext);
+      // RenderRepaintBoundary boundary =
+      //     listaKeys.last.currentContext.findRenderObject();
+      // await Future.delayed(const Duration(seconds: 3));
+      // ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+      // ByteData byteData =
+      //     await image.toByteData(format: ui.ImageByteFormat.png);
+      // var pngBytes = byteData.buffer.asUint8List();
+      List<Uint8List> listaPng = List();
+
+      listaKeys.forEach((key) async {
+        await _captureEach(listaKeys.first, listaPng);
+      });
+
+      // Scrollable.ensureVisible(listaKeys[1].currentContext);
+      // RenderRepaintBoundary boundary2 =
+      //     listaKeys[1].currentContext.findRenderObject();
+      // await Future.delayed(const Duration(seconds: 1));
+      // ui.Image image2 = await boundary2.toImage(pixelRatio: 3.0);
+      // ByteData byteData2 =
+      //     await image2.toByteData(format: ui.ImageByteFormat.png);
+      // var pngBytes2 = byteData2.buffer.asUint8List();
+      // listaPng.add(pngBytes2);
+
+      // Scrollable.ensureVisible(listaKeys[2].currentContext);
+      // RenderRepaintBoundary boundary3 =
+      //     listaKeys[2].currentContext.findRenderObject();
+      // await Future.delayed(const Duration(seconds: 1));
+      // ui.Image image3 = await boundary3.toImage(pixelRatio: 3.0);
+      // ByteData byteData3 =
+      //     await image3.toByteData(format: ui.ImageByteFormat.png);
+      // var pngBytes3 = byteData3.buffer.asUint8List();
+      // listaPng.add(pngBytes3);
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TesteImagens(
+            imagens: listaPng,
+          ),
+        ),
+      );
+      // var bs64 = base64Encode(pngBytes);
+      // print(pngBytes);
+      // print(bs64);
+      // setState(() {});
+      // var s = await TreinaMobileClient.postTeste(ImagemPost('Teste', bs64));
+      // if (s == 'Deu certo') {
+      //   await Navigator.push(
+      //     context,
+      //     MaterialPageRoute(
+      //       builder: (context) => TelaSucesso(
+      //         mensagem: 'Documento enviado com sucesso',
+      //         textoBotoes: [],
+      //         funcaoBotoes: [],
+      //       ),
+      //     ),
+      //   );
+      //   Navigator.pop(context);
+      // }
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -47,6 +144,7 @@ class _DocumentoTelaState extends State<DocumentoTela> {
                   padding: const EdgeInsets.all(8.0),
                   child: ImagemComAssinatura(
                     imagem: widget.paginas.arquivo[index],
+                    globalKey: listaKeys[index],
                   ),
                 );
               },
@@ -56,7 +154,7 @@ class _DocumentoTelaState extends State<DocumentoTela> {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.send),
-        onPressed: () {},
+        onPressed: () => _capturePng(),
       ),
     );
   }
@@ -128,24 +226,33 @@ class Signature extends CustomPainter {
 }
 
 class TesteImagens extends StatelessWidget {
-  final Uint8List imagem;
+  final List<Uint8List> imagens;
 
-  const TesteImagens({Key key, this.imagem}) : super(key: key);
+  const TesteImagens({Key key, this.imagens}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Image.memory(imagem),
+      body: ListView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        itemCount: imagens.length,
+        itemBuilder: (context, index) {
+          return Image.memory(imagens[index]);
+        },
+      ),
     );
   }
 }
 
 class ImagemComAssinatura extends StatefulWidget {
   final Uint8List imagem;
+  final GlobalKey globalKey;
 
   ImagemComAssinatura({
     Key key,
     this.imagem,
+    this.globalKey,
   }) : super(key: key);
 
   @override
@@ -155,7 +262,6 @@ class ImagemComAssinatura extends StatefulWidget {
 class _ImagemComAssinaturaState extends State<ImagemComAssinatura>
     with AutomaticKeepAliveClientMixin {
   List<Offset> _points = <Offset>[];
-  GlobalKey _globalKey = GlobalKey();
   double xPosition = 190;
   double yPosition = 190;
 
@@ -276,7 +382,7 @@ class _ImagemComAssinaturaState extends State<ImagemComAssinatura>
   Widget build(BuildContext context) {
     super.build(context);
     return RepaintBoundary(
-      key: _globalKey,
+      key: widget.globalKey,
       child: Stack(
         children: [
           GestureDetector(
