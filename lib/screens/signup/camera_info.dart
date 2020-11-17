@@ -13,29 +13,27 @@ class CameraInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-          child: SingleChildScrollView(
+      appBar: AppBar(
+        title: Text('Atenção'),
+      ),
+      body: SingleChildScrollView(
         child: Column(
           children: [
-            Text(
-              'Atenção',
-              style: TextStyle(
-                fontWeight: FontWeight.w800,
-              ),
-            ),
             Padding(
               padding: const EdgeInsets.all(24.0),
               child: Column(
                 children: [
                   Text(
-                    'Precisamos acessar sua câmera para capturar a sua face e cadastrar em nosso banco de dados. Ao clicar no botão \'Prosseguir\', você concorda com a gravação e o armazenamento de sua imagaem',
+                    'Precisaremos acessar sua câmera para capturar a sua face e cadastrar em nosso banco de dados. Ao clicar no botão \'Prosseguir\', você concorda com a gravação e o armazenamento de sua imagem',
                     style: TextStyle(
+                      fontSize: 16.0,
                       fontWeight: FontWeight.w400,
                     ),
                   ),
                   Text(
                     'Será uma gravação de 10 segundos, clique em permitir o acesso a câmera para que seja possível concluir a gravação.',
                     style: TextStyle(
+                      fontSize: 16.0,
                       fontWeight: FontWeight.w400,
                     ),
                   ),
@@ -43,6 +41,7 @@ class CameraInfo extends StatelessWidget {
               ),
             ),
             RaisedButton(
+              color: Theme.of(context).accentColor,
               onPressed: () async {
                 // Obtain a list of the available cameras on the device.
                 final cameras = await availableCameras();
@@ -69,7 +68,7 @@ class CameraInfo extends StatelessWidget {
             )
           ],
         ),
-      )),
+      ),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shuri/components/barra_inferior.dart';
 import 'package:shuri/components/barra_superior.dart';
 import 'package:shuri/components/pasta.dart';
 import 'package:shuri/http/webclients/treina_mobileclient.dart';
@@ -91,26 +92,8 @@ class _PaginaInicialState extends State<PaginaInicial> {
           setState(() {});
         },
       ),
-      bottomNavigationBar: Container(
-        color: Color.fromRGBO(255, 190, 74, 1),
-        height: MediaQuery.of(context).size.height * 0.1,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Icon(
-              Icons.folder,
-              color: Colors.white,
-            ),
-            Icon(
-              Icons.notifications,
-              color: Colors.white,
-            ),
-            Icon(
-              Icons.settings,
-              color: Colors.white,
-            ),
-          ],
-        ),
+      bottomNavigationBar: BarraInferior(
+        pastas: true,
       ),
     );
   }

@@ -14,7 +14,7 @@ class _NovaPastaState extends State<NovaPasta> {
   final TextEditingController _pastaController = TextEditingController();
   final TextEditingController _descricaoController = TextEditingController();
   List<String> _usuarios = List();
-  Widget botaoAdd = Text('ADD');
+  Widget botaoAdd = Icon(Icons.add_circle);
   bool erro = false;
 
   @override
@@ -26,137 +26,143 @@ class _NovaPastaState extends State<NovaPasta> {
       ),
       body: Form(
         key: _formKey,
-        child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Cadastro'),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    controller: _pastaController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.black,
-                        ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 8.0, right: 8.0, top: 48.0, bottom: 8.0),
+                child: TextFormField(
+                  controller: _pastaController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.black,
                       ),
-                      labelText: 'Nome da pasta',
                     ),
+                    labelText: 'Nome da pasta',
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    controller: _descricaoController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.black,
-                        ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: _descricaoController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.black,
                       ),
-                      labelText: 'Descrição',
                     ),
+                    labelText: 'Descrição',
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.7,
-                          child: TextFormField(
-                            controller: _usuariosController,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.black,
-                                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: TextFormField(
+                          controller: _usuariosController,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.black,
                               ),
-                              labelText: 'Participantes',
                             ),
+                            labelText: 'Participantes',
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: FlatButton(
-                            onPressed: () async {
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 24.0),
+                        child: InkWell(
+                          onTap: () async {
+                            setState(() {
+                              botaoAdd = CircularProgressIndicator();
+                            });
+                            var pessoa = await TreinaMobileClient.buscaPorEmail(
+                                _usuariosController.text);
+                            if (pessoa != null) {
                               setState(() {
-                                botaoAdd = CircularProgressIndicator();
+                                botaoAdd = Icon(Icons.add_circle);
+                                _usuarios.add(_usuariosController.text);
+                                _usuariosController.text = '';
                               });
-                              var pessoa =
-                                  await TreinaMobileClient.buscaPorEmail(
-                                      _usuariosController.text);
-                              if (pessoa != null) {
-                                setState(() {
-                                  botaoAdd = Text('ADD');
-                                  _usuarios.add(_usuariosController.text);
-                                  _usuariosController.text = '';
-                                });
-                              } else {
-                                _scaffoldKey.currentState.showSnackBar(
-                                  SnackBar(
-                                    content: Text('E-mail não encontrado'),
-                                  ),
-                                );
-                                setState(() {
-                                  botaoAdd = Text('ADD');
-                                  erro = true;
-                                });
-                              }
-                            },
+                            } else {
+                              _scaffoldKey.currentState.showSnackBar(
+                                SnackBar(
+                                  content: Text('E-mail não encontrado'),
+                                ),
+                              );
+                              setState(() {
+                                botaoAdd = Icon(Icons.add_circle);
+                                erro = true;
+                              });
+                            }
+                          },
+                          child: Center(
                             child: botaoAdd,
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height * 0.3,
-                    child: ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      itemCount: _usuarios.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            _usuarios[index],
-                            style: TextStyle(fontSize: 16.0),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-                RaisedButton(
-                  onPressed: () async {
-                    var pastaResponse = await TreinaMobileClient.criaNovaPasta(
-                      PastaDTO(
-                        _pastaController.text,
-                        _descricaoController.text,
-                        _usuarios,
                       ),
-                    );
-                    debugPrint(pastaResponse.toString());
-                    Navigator.pop(context);
-                  },
-                  child: Text(
-                    'Prosseguir',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      color: Colors.white,
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    itemCount: _usuarios.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          _usuarios[index],
+                          style: TextStyle(fontSize: 16.0),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child: Center(
+                  child: RaisedButton(
+                    color: Colors.black,
+                    onPressed: () async {
+                      var pastaResponse =
+                          await TreinaMobileClient.criaNovaPasta(
+                        PastaDTO(
+                          _pastaController.text,
+                          _descricaoController.text,
+                          _usuarios,
+                        ),
+                      );
+                      debugPrint(pastaResponse.toString());
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      'Prosseguir',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                )
-              ],
-            ),
+                ),
+              )
+            ],
           ),
         ),
       ),

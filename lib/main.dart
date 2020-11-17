@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shuri/http/webclients/treina_mobileclient.dart';
+import 'package:shuri/screens/configuracoes/configuracoes.dart';
 import 'package:shuri/screens/menu_inicial.dart';
+import 'package:shuri/screens/notificacoes/notificacoes.dart';
 import 'package:shuri/screens/pastas/pagina_inicial.dart';
 
 void main() async {
@@ -17,11 +19,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        primaryColor: Color.fromRGBO(255, 150, 0, 1),
-        accentColor: Color.fromRGBO(255, 150, 0, 1),
+        primaryColor: Colors.grey,
+        accentColor: Colors.black,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: PaginaInicial(),
+      home: MenuInicial(),
     );
   }
 }
