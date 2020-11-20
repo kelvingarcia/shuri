@@ -24,7 +24,7 @@ class BotaoRedondo extends StatelessWidget {
           ),
         ),
         textColor: Colors.white,
-        color: Color.fromRGBO(255, 150, 0, 1),
+        color: Theme.of(context).accentColor,
         child: Container(
           width: MediaQuery.of(context).size.width * 0.4,
           child: Row(

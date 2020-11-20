@@ -43,14 +43,6 @@ class Configuracoes extends StatelessWidget {
             ),
           ),
           ItemMenu(
-            icone: Icons.colorize,
-            texto: 'Alterar cores',
-            borda: BorderSide(
-              color: Colors.black,
-              width: 1.0,
-            ),
-          ),
-          ItemMenu(
             icone: Icons.star,
             texto: 'Avaliar o app',
             borda: BorderSide(

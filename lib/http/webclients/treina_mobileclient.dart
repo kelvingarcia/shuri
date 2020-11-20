@@ -154,7 +154,7 @@ class TreinaMobileClient {
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
     var response = await client.get(
-      'http://192.168.0.2:8085/email/' + email,
+      'http://192.168.0.6:8085/email/' + email,
       headers: {
         'Authorization': token,
       },

@@ -17,8 +17,12 @@ class _SignUpSucessoState extends State<SignUpSucesso> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Cadastro finalizado'),
+      ),
       body: FutureBuilder<PessoaDTO>(
-        future: TreinaMobileClient.postPessoa(widget.treinaRequest),
+        future:
+            Future.value(PessoaDTO('Teste', 'Kelvin', 'kelvin@email.com', 1)),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
@@ -41,38 +45,43 @@ class _SignUpSucessoState extends State<SignUpSucesso> {
               if (snapshot.hasData) {
                 final PessoaDTO pessoa = snapshot.data;
                 if (pessoa != null) {
-                  return Center(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Card(
-                            child: ListTile(
-                              title: Text(
-                                pessoa.nome,
-                                style: TextStyle(
-                                  fontSize: 24.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              subtitle: Text(
-                                pessoa.email,
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                ),
-                              ),
+                  return Container(
+                    height: MediaQuery.of(context).size.height,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.check_circle,
+                          size: 96.0,
+                        ),
+                        Center(
+                          child: Text(
+                            'Cadastro de ' +
+                                pessoa.nome +
+                                ' realizado com sucesso!',
+                            style: TextStyle(
+                              fontSize: 24.0,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          RaisedButton(
-                            child: Text('Voltar para o menu'),
-                            onPressed: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => MenuInicial(),
-                              ),
+                        ),
+                        RaisedButton(
+                          color: Theme.of(context).accentColor,
+                          child: Text(
+                            'Voltar para o menu',
+                            style: TextStyle(
+                              color: Colors.white,
                             ),
                           ),
-                        ],
-                      ),
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MenuInicial(),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 }

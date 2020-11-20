@@ -27,28 +27,23 @@ class _CameraVideoMobileState extends State<CameraVideoMobile> {
   CameraController _controller;
   Future<void> _initializeControllerFuture;
   IconData icone = Icons.videocam;
-  String _start = '10';
+  String _start = '15';
   Timer _timer;
+  bool visibleTimer = false;
 
   @override
   void initState() {
     super.initState();
-    // To display the current output from the Camera,
-    // create a CameraController.
     _controller = CameraController(
-      // Get a specific camera from the list of available cameras.
       widget.camera,
-      // Define the resolution to use.
       ResolutionPreset.medium,
     );
 
-    // Next, initialize the controller. This returns a Future.
     _initializeControllerFuture = _controller.initialize();
   }
 
   @override
   void dispose() {
-    // Dispose of the controller when the widget is disposed.
     _controller.dispose();
     super.dispose();
   }
@@ -62,7 +57,11 @@ class _CameraVideoMobileState extends State<CameraVideoMobile> {
           if (int.parse(_start) < 1) {
             timer.cancel();
           } else {
-            _start = '0' + (int.parse(_start) - 1).toString();
+            if (int.parse(_start) < 10) {
+              _start = '0' + (int.parse(_start) - 1).toString();
+            } else {
+              _start = (int.parse(_start) - 1).toString();
+            }
           }
         },
       ),
@@ -89,26 +88,29 @@ class _CameraVideoMobileState extends State<CameraVideoMobile> {
               },
             ),
           ),
-          Positioned(
-            left: MediaQuery.of(context).size.width * 0.05,
-            bottom: 24.0,
-            child: Row(
-              children: [
-                Icon(
-                  Icons.circle,
-                  color: Colors.red,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Text(
-                    '00:' + _start,
-                    style: TextStyle(
-                      fontSize: 24.0,
-                      color: Colors.white,
+          Visibility(
+            visible: visibleTimer,
+            child: Positioned(
+              left: MediaQuery.of(context).size.width * 0.05,
+              bottom: 24.0,
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.circle,
+                    color: Colors.red,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Text(
+                      '00:' + _start,
+                      style: TextStyle(
+                        fontSize: 24.0,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],
@@ -118,6 +120,7 @@ class _CameraVideoMobileState extends State<CameraVideoMobile> {
         onPressed: () async {
           setState(() {
             icone = Icons.close;
+            visibleTimer = true;
           });
           startTimer();
           try {
@@ -132,7 +135,7 @@ class _CameraVideoMobileState extends State<CameraVideoMobile> {
 
             await _controller.startVideoRecording(path);
 
-            await Future.delayed(Duration(seconds: 10));
+            await Future.delayed(Duration(seconds: 15));
 
             await _controller.stopVideoRecording();
 
@@ -142,11 +145,17 @@ class _CameraVideoMobileState extends State<CameraVideoMobile> {
 
             widget.treinaRequest.video = encode;
 
-            Navigator.push(
+            await Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => SignUpSucesso(widget.treinaRequest)),
             );
+
+            setState(() {
+              icone = Icons.videocam;
+              visibleTimer = false;
+              _start = '10';
+            });
           } catch (e) {
             print(e);
           }

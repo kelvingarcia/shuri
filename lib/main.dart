@@ -4,6 +4,7 @@ import 'package:shuri/screens/configuracoes/configuracoes.dart';
 import 'package:shuri/screens/menu_inicial.dart';
 import 'package:shuri/screens/notificacoes/notificacoes.dart';
 import 'package:shuri/screens/pastas/pagina_inicial.dart';
+import 'package:shuri/screens/signup/signup_sucesso.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

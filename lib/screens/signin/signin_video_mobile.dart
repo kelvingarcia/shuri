@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -23,6 +24,10 @@ class SignInVideoMobile extends StatefulWidget {
 class _SignInVideoMobileState extends State<SignInVideoMobile> {
   CameraController _controller;
   Future<void> _initializeControllerFuture;
+  IconData icone = Icons.videocam;
+  String _start = '5';
+  Timer _timer;
+  bool visibleTimer = false;
 
   @override
   void initState() {
@@ -47,48 +52,84 @@ class _SignInVideoMobileState extends State<SignInVideoMobile> {
     super.dispose();
   }
 
+  void startTimer() {
+    const oneSec = const Duration(seconds: 1);
+    _timer = Timer.periodic(
+      oneSec,
+      (Timer timer) => setState(
+        () {
+          if (int.parse(_start) < 1) {
+            timer.cancel();
+          } else {
+            _start = (int.parse(_start) - 1).toString();
+          }
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Reconhecimento'),
+        title: Text('Cadastro face'),
       ),
-      // Wait until the controller is initialized before displaying the
-      // camera preview. Use a FutureBuilder to display a loading spinner
-      // until the controller has finished initializing.
-      body: FutureBuilder<void>(
-        future: _initializeControllerFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            // If the Future is complete, display the preview.
-            return CameraPreview(_controller);
-          } else {
-            // Otherwise, display a loading indicator.
-            return Center(child: CircularProgressIndicator());
-          }
-        },
+      body: Stack(
+        children: [
+          Positioned(
+            child: FutureBuilder<void>(
+              future: _initializeControllerFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return CameraPreview(_controller);
+                } else {
+                  return Center(child: CircularProgressIndicator());
+                }
+              },
+            ),
+          ),
+          Visibility(
+            visible: visibleTimer,
+            child: Positioned(
+              left: MediaQuery.of(context).size.width * 0.05,
+              bottom: 24.0,
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.circle,
+                    color: Colors.red,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Text(
+                      '00:0' + _start,
+                      style: TextStyle(
+                        fontSize: 24.0,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.camera_alt),
-        // Provide an onPressed callback.
+        child: Icon(icone),
         onPressed: () async {
-          // Take the Picture in a try / catch block. If anything goes wrong,
-          // catch the error.
+          setState(() {
+            icone = Icons.close;
+            visibleTimer = true;
+          });
+          startTimer();
           try {
-            // Ensure that the camera is initialized.
             await _initializeControllerFuture;
 
-            // Construct the path where the image should be saved using the
-            // pattern package.
             final path = join(
-              // Store the picture in the temp directory.
-              // Find the temp directory using the `path_provider` plugin.
               (await getTemporaryDirectory()).path,
               '${DateTime.now()}.mp4',
             );
-
-            // Attempt to take a picture and log where it's been saved.
-            // await _controller.takePicture(path);
 
             await _controller.prepareForVideoRecording();
 
@@ -104,14 +145,17 @@ class _SignInVideoMobileState extends State<SignInVideoMobile> {
 
             var reconheceRequest = ReconheceRequest(encode);
 
-            // If the picture was taken, display it on a new screen.
-            Navigator.push(
+            await Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) => SignInSucesso(reconheceRequest)),
+              MaterialPageRoute(builder: (context) => SignInSucesso(null)),
             );
+
+            setState(() {
+              icone = Icons.videocam;
+              visibleTimer = false;
+              _start = '5';
+            });
           } catch (e) {
-            // If an error occurs, log the error to the console.
             print(e);
           }
         },
