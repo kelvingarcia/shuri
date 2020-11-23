@@ -4,19 +4,21 @@ class ItemMenu extends StatelessWidget {
   final IconData icone;
   final BorderSide borda;
   final String texto;
+  final Function onTap;
 
   const ItemMenu({
     Key key,
     this.icone,
     this.borda,
     this.texto,
+    this.onTap,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       splashColor: Colors.white,
-      onTap: () {},
+      onTap: onTap ?? () {},
       child: DecoratedBox(
         decoration: BoxDecoration(
           border: Border(

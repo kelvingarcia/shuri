@@ -25,20 +25,18 @@ class BotaoRedondo extends StatelessWidget {
         ),
         textColor: Colors.white,
         color: Theme.of(context).accentColor,
-        child: Container(
-          width: MediaQuery.of(context).size.width * 0.4,
-          child: Row(
-            children: [
-              icon,
-              Padding(
-                padding: const EdgeInsets.only(left: 16.0),
-                child: Text(
-                  text,
-                  style: TextStyle(fontSize: fontSize),
-                ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            icon,
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0),
+              child: Text(
+                text,
+                style: TextStyle(fontSize: fontSize),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
         onPressed: onPressed,
       ),

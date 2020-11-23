@@ -2,6 +2,7 @@
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:shuri/components/botao_redondo.dart';
 import 'package:shuri/models/treina_request.dart';
 import 'package:shuri/screens/signup/camera_video_mobile.dart';
 
@@ -24,14 +25,14 @@ class CameraInfo extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    'Precisaremos acessar sua câmera para capturar a sua face e cadastrar em nosso banco de dados. Ao clicar no botão \'Prosseguir\', você concorda com a gravação e o armazenamento de sua imagem',
+                    'Precisaremos acessar sua câmera para capturar a sua face e cadastrar em nosso banco de dados. Ao clicar no botão \'Prosseguir\', você concorda com a gravação e o armazenamento de sua imagem.',
                     style: TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.w400,
                     ),
                   ),
                   Text(
-                    'Será uma gravação de 10 segundos, clique em permitir o acesso a câmera para que seja possível concluir a gravação.',
+                    'Será uma gravação de 15 segundos, clique em permitir o acesso a câmera para que seja possível concluir a gravação.',
                     style: TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.w400,
@@ -40,8 +41,9 @@ class CameraInfo extends StatelessWidget {
                 ],
               ),
             ),
-            RaisedButton(
-              color: Theme.of(context).accentColor,
+            BotaoRedondo(
+              icon: Icon(Icons.arrow_forward),
+              text: 'Prosseguir',
               onPressed: () async {
                 // Obtain a list of the available cameras on the device.
                 final cameras = await availableCameras();
@@ -58,14 +60,7 @@ class CameraInfo extends StatelessWidget {
                   ),
                 );
               },
-              child: Text(
-                'Prosseguir',
-                style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.white,
-                ),
-              ),
-            )
+            ),
           ],
         ),
       ),

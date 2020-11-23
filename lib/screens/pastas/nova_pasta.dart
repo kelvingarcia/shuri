@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shuri/components/botao_redondo.dart';
 import 'package:shuri/http/webclients/treina_mobileclient.dart';
 import 'package:shuri/models/pasta_dto.dart';
 
@@ -126,42 +127,40 @@ class _NovaPastaState extends State<NovaPasta> {
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          _usuarios[index],
-                          style: TextStyle(fontSize: 16.0),
+                        child: Row(
+                          children: [
+                            Text(
+                              _usuarios[index],
+                              style: TextStyle(fontSize: 16.0),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Icon(Icons.delete),
+                            ),
+                          ],
                         ),
                       );
                     },
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: Center(
-                  child: RaisedButton(
-                    color: Colors.black,
-                    onPressed: () async {
-                      var pastaResponse =
-                          await TreinaMobileClient.criaNovaPasta(
-                        PastaDTO(
-                          _pastaController.text,
-                          _descricaoController.text,
-                          _usuarios,
-                        ),
-                      );
-                      debugPrint(pastaResponse.toString());
-                      Navigator.pop(context);
-                    },
-                    child: Text(
-                      'Prosseguir',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        color: Colors.white,
+              Center(
+                child: BotaoRedondo(
+                  icon: Icon(Icons.done),
+                  text: 'Criar pasta',
+                  onPressed: () async {
+                    var pastaResponse = await TreinaMobileClient.criaNovaPasta(
+                      PastaDTO(
+                        _pastaController.text,
+                        _descricaoController.text,
+                        _usuarios,
                       ),
-                    ),
-                  ),
+                    );
+                    debugPrint(pastaResponse.toString());
+                    Navigator.pop(context);
+                  },
                 ),
-              )
+              ),
             ],
           ),
         ),

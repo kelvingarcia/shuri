@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart';
 import 'dart:ui' as ui;
 
 import 'package:shuri/http/webclients/treina_mobileclient.dart';
@@ -281,6 +282,7 @@ class _ImagemComAssinaturaState extends State<ImagemComAssinatura>
   bool visibilidade = false;
 
   BorderStyle borderStyle = BorderStyle.none;
+  BuildContext contextGlobal;
 
   @override
   bool get wantKeepAlive => true;
@@ -369,18 +371,48 @@ class _ImagemComAssinaturaState extends State<ImagemComAssinatura>
   @override
   void initState() {
     super.initState();
-    debugPrint('iniciou pagina');
     WidgetsBinding.instance.scheduleFrameCallback((timeStamp) {
       setState(() {
         bolinha1 = 190 - (MediaQuery.of(context).size.width * 0.013);
         bolinha2 = 190 - (MediaQuery.of(context).size.width * 0.013);
       });
     });
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      _showSobre();
+    });
+  }
+
+  Future<void> _showSobre() async {
+    return showDialog<void>(
+      context: contextGlobal,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Atenção'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Clique em cima da página para assinar'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    contextGlobal = context;
     return RepaintBoundary(
       key: widget.globalKey,
       child: Stack(

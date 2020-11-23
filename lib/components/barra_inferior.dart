@@ -18,7 +18,7 @@ class BarraInferior extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.grey,
+      color: Theme.of(context).primaryColor,
       height: MediaQuery.of(context).size.height * 0.1,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,

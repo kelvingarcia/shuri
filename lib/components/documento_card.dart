@@ -93,9 +93,17 @@ class DocumentoCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Text(
-                    data,
-                    style: TextStyle(fontSize: 16.0),
+                  Column(
+                    children: [
+                      Visibility(
+                        visible: false,
+                        child: Icon(Icons.check),
+                      ),
+                      Text(
+                        data,
+                        style: TextStyle(fontSize: 16.0),
+                      ),
+                    ],
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 4.0),

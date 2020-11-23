@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shuri/models/reconhece_request.dart';
@@ -28,6 +29,7 @@ class _SignInVideoMobileState extends State<SignInVideoMobile> {
   String _start = '5';
   Timer _timer;
   bool visibleTimer = false;
+  BuildContext contextGlobal;
 
   @override
   void initState() {
@@ -43,6 +45,38 @@ class _SignInVideoMobileState extends State<SignInVideoMobile> {
 
     // Next, initialize the controller. This returns a Future.
     _initializeControllerFuture = _controller.initialize();
+
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      _showSobre();
+    });
+  }
+
+  Future<void> _showSobre() async {
+    return showDialog<void>(
+      context: contextGlobal,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Atenção'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(
+                    'Centralize seu rosto na câmera e evite muitos movimentos para que o reconhecimento seja mais preciso.'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -70,9 +104,10 @@ class _SignInVideoMobileState extends State<SignInVideoMobile> {
 
   @override
   Widget build(BuildContext context) {
+    contextGlobal = context;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cadastro face'),
+        title: Text('Reconhecimento facial'),
       ),
       body: Stack(
         children: [

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shuri/components/botao_redondo.dart';
 import 'package:shuri/models/pessoa_dto.dart';
 import 'package:shuri/models/predicao_confianca.dart';
 import 'package:shuri/models/reconhece_request.dart';
@@ -20,7 +21,7 @@ class _SignInSucessoState extends State<SignInSucesso> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: Text('Envio'),
       ),
       body: FutureBuilder<ReconhecimentoToken>(
         future: Future.value(
@@ -76,39 +77,16 @@ class _SignInSucessoState extends State<SignInSucesso> {
                         ),
                         Center(
                           child: Text(
-                            'Reconhecimento concluído!',
+                            'Documento enviado!',
                             style: TextStyle(
                               fontSize: 24.0,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                        Center(
-                          child: Column(
-                            children: [
-                              Text(
-                                reconhecimentoToken.reconhecimento.pessoa.nome,
-                                style: TextStyle(
-                                  fontSize: 24.0,
-                                ),
-                              ),
-                              Text(
-                                reconhecimentoToken.reconhecimento.pessoa.email,
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        RaisedButton(
-                          color: Theme.of(context).accentColor,
-                          child: Text(
-                            'Prosseguir',
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
+                        BotaoRedondo(
+                          icon: Icon(Icons.arrow_back),
+                          text: 'Retornar para a pasta',
                           onPressed: () => Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -140,18 +118,10 @@ class _SignInSucessoState extends State<SignInSucesso> {
                         style: TextStyle(fontSize: 24),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: RaisedButton(
-                        color: Theme.of(context).accentColor,
-                        onPressed: () => Navigator.pop(context),
-                        child: Text(
-                          'Tentar novamente',
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
+                    BotaoRedondo(
+                      icon: Icon(Icons.refresh),
+                      text: 'Tentar novamente',
+                      onPressed: () => Navigator.pop(context),
                     ),
                   ],
                 ),
@@ -178,18 +148,10 @@ class _SignInSucessoState extends State<SignInSucesso> {
                     style: TextStyle(fontSize: 24),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: RaisedButton(
-                    color: Theme.of(context).accentColor,
-                    onPressed: () => Navigator.pop(context),
-                    child: Text(
-                      'Tentar novamente',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+                BotaoRedondo(
+                  icon: Icon(Icons.refresh),
+                  text: 'Tentar novamente',
+                  onPressed: () => Navigator.pop(context),
                 ),
               ],
             ),

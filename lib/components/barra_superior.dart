@@ -15,7 +15,7 @@ class BarraSuperior extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           InkWell(
-            child: Icon(voltar ? Icons.arrow_back : Icons.crop_square),
+            child: voltar ? Icon(Icons.arrow_back) : Container(),
             onTap: () {
               if (voltar) {
                 Navigator.pop(context);

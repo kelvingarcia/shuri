@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:shuri/components/barra_superior.dart';
+import 'package:shuri/components/botao_redondo.dart';
 import 'package:shuri/http/webclients/treina_mobileclient.dart';
 import 'package:shuri/models/arquivo_pdf.dart';
 
@@ -108,7 +109,9 @@ class _UploadTelaState extends State<UploadTela> {
                       ],
                     ),
                     Center(
-                      child: RaisedButton(
+                      child: BotaoRedondo(
+                        icon: Icon(Icons.done),
+                        text: 'Fazer upload',
                         onPressed: () async {
                           var response = await TreinaMobileClient.postArquivo(
                             ArquivoPDF(
@@ -122,7 +125,6 @@ class _UploadTelaState extends State<UploadTela> {
                           debugPrint(response);
                           Navigator.pop(context);
                         },
-                        child: Text('Fazer upload'),
                       ),
                     ),
                   ],

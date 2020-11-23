@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shuri/components/botao_redondo.dart';
 import 'package:shuri/components/card_principal.dart';
 import 'package:shuri/models/treina_request.dart';
 import 'package:shuri/screens/signup/camera_info.dart';
@@ -54,28 +55,20 @@ class _SignUpState extends State<SignUp> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: RaisedButton(
-                  color: Theme.of(context).accentColor,
-                  onPressed: () {
-                    var treinaRequest = TreinaRequest(
-                        nome: _nomeController.text,
-                        email: _emailController.text);
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CameraInfo(treinaRequest)));
-                  },
-                  child: Text(
-                    'Prosseguir',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      color: Colors.white,
+              BotaoRedondo(
+                icon: Icon(Icons.arrow_forward),
+                text: 'Prosseguir',
+                onPressed: () {
+                  var treinaRequest = TreinaRequest(
+                      nome: _nomeController.text, email: _emailController.text);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CameraInfo(treinaRequest),
                     ),
-                  ),
-                ),
-              )
+                  );
+                },
+              ),
             ],
           ),
         ),

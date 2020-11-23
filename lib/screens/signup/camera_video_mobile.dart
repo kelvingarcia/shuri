@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shuri/models/treina_request.dart';
@@ -30,6 +31,7 @@ class _CameraVideoMobileState extends State<CameraVideoMobile> {
   String _start = '15';
   Timer _timer;
   bool visibleTimer = false;
+  BuildContext contextGlobal;
 
   @override
   void initState() {
@@ -40,12 +42,43 @@ class _CameraVideoMobileState extends State<CameraVideoMobile> {
     );
 
     _initializeControllerFuture = _controller.initialize();
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      _showSobre();
+    });
   }
 
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  Future<void> _showSobre() async {
+    return showDialog<void>(
+      context: contextGlobal,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Atenção'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(
+                    'Centralize seu rosto na câmera e evite muitos movimentos para que o reconhecimento seja mais preciso.'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void startTimer() {
@@ -57,7 +90,7 @@ class _CameraVideoMobileState extends State<CameraVideoMobile> {
           if (int.parse(_start) < 1) {
             timer.cancel();
           } else {
-            if (int.parse(_start) < 10) {
+            if (int.parse(_start) < 11) {
               _start = '0' + (int.parse(_start) - 1).toString();
             } else {
               _start = (int.parse(_start) - 1).toString();
@@ -70,6 +103,7 @@ class _CameraVideoMobileState extends State<CameraVideoMobile> {
 
   @override
   Widget build(BuildContext context) {
+    contextGlobal = context;
     return Scaffold(
       appBar: AppBar(
         title: Text('Cadastro face'),

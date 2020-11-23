@@ -1,29 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:shuri/components/botao_redondo.dart';
-import 'package:shuri/http/webclients/treina_mobileclient.dart';
 import 'package:shuri/models/pessoa_dto.dart';
-import 'package:shuri/models/treina_request.dart';
-import 'package:shuri/screens/menu_inicial.dart';
+import 'package:shuri/models/predicao_confianca.dart';
+import 'package:shuri/models/reconhece_request.dart';
+import 'package:shuri/models/reconhecimento.dart';
+import 'package:shuri/models/reconhecimento_token.dart';
+import 'package:shuri/screens/pastas/pagina_inicial.dart';
 
-class SignUpSucesso extends StatefulWidget {
-  final TreinaRequest treinaRequest;
+class EnvioSucesso extends StatefulWidget {
+  final ReconheceRequest reconheceRequest;
 
-  SignUpSucesso(this.treinaRequest);
+  EnvioSucesso(this.reconheceRequest);
 
   @override
-  _SignUpSucessoState createState() => _SignUpSucessoState();
+  _EnvioSucessoState createState() => _EnvioSucessoState();
 }
 
-class _SignUpSucessoState extends State<SignUpSucesso> {
+class _EnvioSucessoState extends State<EnvioSucesso> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cadastro finalizado'),
+        title: Text('Login'),
       ),
-      body: FutureBuilder<PessoaDTO>(
-        future:
-            Future.value(PessoaDTO('Teste', 'Kelvin', 'kelvin@email.com', 1)),
+      body: FutureBuilder<ReconhecimentoToken>(
+        future: Future.value(
+          ReconhecimentoToken(
+            Reconhecimento(
+                PessoaDTO(
+                  'Teste',
+                  'Kelvin',
+                  'kelvin@email.com',
+                  1,
+                ),
+                PredicaoConfianca(
+                  1,
+                  100.0,
+                  10,
+                  10,
+                ),
+                'RECONHECIDO CORRETAMENTE'),
+            'TOKEN',
+          ),
+        ),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
@@ -35,7 +54,7 @@ class _SignUpSucessoState extends State<SignUpSucesso> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     CircularProgressIndicator(),
-                    Text('Cadastrando...')
+                    Text('Enviando...')
                   ],
                 ),
               );
@@ -44,8 +63,8 @@ class _SignUpSucessoState extends State<SignUpSucesso> {
               break;
             case ConnectionState.done:
               if (snapshot.hasData) {
-                final PessoaDTO pessoa = snapshot.data;
-                if (pessoa != null) {
+                final ReconhecimentoToken reconhecimentoToken = snapshot.data;
+                if (reconhecimentoToken != null) {
                   return Container(
                     height: MediaQuery.of(context).size.height,
                     child: Column(
@@ -56,25 +75,40 @@ class _SignUpSucessoState extends State<SignUpSucesso> {
                           Icons.check_circle,
                           size: 96.0,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(24.0),
+                        Center(
                           child: Text(
-                            'Cadastro de ' +
-                                pessoa.nome +
-                                ' realizado com sucesso!',
+                            'Reconhecimento concluído!',
                             style: TextStyle(
                               fontSize: 24.0,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
+                        Center(
+                          child: Column(
+                            children: [
+                              Text(
+                                reconhecimentoToken.reconhecimento.pessoa.nome,
+                                style: TextStyle(
+                                  fontSize: 24.0,
+                                ),
+                              ),
+                              Text(
+                                reconhecimentoToken.reconhecimento.pessoa.email,
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                         BotaoRedondo(
-                          icon: Icon(Icons.arrow_back),
-                          text: 'Voltar para o menu',
+                          icon: Icon(Icons.arrow_forward),
+                          text: 'Prosseguir',
                           onPressed: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => MenuInicial(),
+                              builder: (context) => PaginaInicial(),
                             ),
                           ),
                         ),
@@ -102,6 +136,11 @@ class _SignUpSucessoState extends State<SignUpSucesso> {
                         style: TextStyle(fontSize: 24),
                       ),
                     ),
+                    BotaoRedondo(
+                      icon: Icon(Icons.refresh),
+                      text: 'Tentar novamente',
+                      onPressed: () => Navigator.pop(context),
+                    ),
                   ],
                 ),
               );
@@ -126,6 +165,11 @@ class _SignUpSucessoState extends State<SignUpSucesso> {
                     'Erro desconhecido',
                     style: TextStyle(fontSize: 24),
                   ),
+                ),
+                BotaoRedondo(
+                  icon: Icon(Icons.refresh),
+                  text: 'Tentar novamente',
+                  onPressed: () => Navigator.pop(context),
                 ),
               ],
             ),
