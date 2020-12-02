@@ -58,6 +58,10 @@ class TreinaMobileClient {
       'nomeUsuario',
       reconhecimentoToken.reconhecimento.pessoa.nome,
     );
+    prefs.setString(
+      'emailUsuario',
+      reconhecimentoToken.reconhecimento.pessoa.email,
+    );
     return reconhecimentoToken;
   }
 
@@ -127,8 +131,9 @@ class TreinaMobileClient {
   static Future<List<PastaResponse>> listaDePastas() async {
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
+    var email = prefs.getString('emailUsuario');
     var response = await client.get(
-      baseUrl + 'listaDePastas',
+      baseUrl + 'listaDePastas/' + email,
       headers: {
         'Authorization': token,
       },
@@ -177,7 +182,7 @@ class TreinaMobileClient {
     return listaDocs.map((element) => DocumentoDTO.fromJson(element)).toList();
   }
 
-    static Future<PastaModel> getUmaPasta(String idPasta) async {
+  static Future<PastaModel> getUmaPasta(String idPasta) async {
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
     var response = await client.get(

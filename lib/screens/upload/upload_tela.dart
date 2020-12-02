@@ -6,6 +6,7 @@ import 'package:shuri/components/barra_superior.dart';
 import 'package:shuri/components/botao_redondo.dart';
 import 'package:shuri/http/webclients/treina_mobileclient.dart';
 import 'package:shuri/models/arquivo_pdf.dart';
+import 'package:shuri/models/pasta_model.dart';
 
 class UploadTela extends StatefulWidget {
   final String idPasta;
@@ -25,9 +26,7 @@ class UploadTela extends StatefulWidget {
 class _UploadTelaState extends State<UploadTela> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nomeController = TextEditingController();
-  bool kelvin = false;
-  bool welington = false;
-  bool grillo = false;
+  List<bool> marcados = List();
 
   @override
   void initState() {
@@ -69,44 +68,55 @@ class _UploadTelaState extends State<UploadTela> {
                       padding: const EdgeInsets.only(top: 16.0),
                       child: Text('Quem deve assinar:'),
                     ),
-                    Row(
-                      children: [
-                        Checkbox(
-                          value: kelvin,
-                          onChanged: (value) {
-                            setState(() {
-                              kelvin = value;
-                            });
-                          },
-                        ),
-                        Text('kelvin@email.com'),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Checkbox(
-                          value: welington,
-                          onChanged: (value) {
-                            setState(() {
-                              welington = value;
-                            });
-                          },
-                        ),
-                        Text('welington@email.com'),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Checkbox(
-                          value: grillo,
-                          onChanged: (value) {
-                            setState(() {
-                              grillo = value;
-                            });
-                          },
-                        ),
-                        Text('grillo@email.com'),
-                      ],
+                    FutureBuilder<PastaModel>(
+                      future: TreinaMobileClient.getUmaPasta(widget.idPasta),
+                      builder: (context, snapshot) {
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.none:
+                            return Container();
+                            break;
+                          case ConnectionState.waiting:
+                            return Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  CircularProgressIndicator(),
+                                  Text('Aguarde...')
+                                ],
+                              ),
+                            );
+                            break;
+                          case ConnectionState.active:
+                            break;
+                          case ConnectionState.done:
+                            if (snapshot.hasData) {
+                              return ListView.builder(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.vertical,
+                                itemCount: snapshot.data.membros.length,
+                                itemBuilder: (context, index) {
+                                  marcados.add(false);
+                                  return Row(
+                                    children: [
+                                      Checkbox(
+                                        value: marcados[index],
+                                        onChanged: (value) {
+                                          setState(() {
+                                            marcados[index] = value;
+                                          });
+                                        },
+                                      ),
+                                      Text(snapshot.data.membros[index]),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
+                            break;
+                        }
+                        return Container();
+                      },
                     ),
                     Center(
                       child: BotaoRedondo(

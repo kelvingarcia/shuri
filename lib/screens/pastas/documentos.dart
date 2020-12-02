@@ -7,7 +7,6 @@ import 'package:shuri/components/documento_card.dart';
 import 'package:shuri/components/icone_pessoa.dart';
 import 'package:shuri/components/pasta.dart';
 import 'package:shuri/http/webclients/treina_mobileclient.dart';
-import 'package:shuri/models/arquivo_pdf.dart';
 import 'package:shuri/models/documento_dto.dart';
 import 'package:shuri/screens/documento/aguarda_documento.dart';
 import 'package:shuri/screens/upload/upload_tela.dart';
