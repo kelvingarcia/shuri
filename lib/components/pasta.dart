@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:rect_getter/rect_getter.dart';
+import 'package:shuri/screens/pastas/nova_pasta.dart';
 
 enum OpcoesMenu { editar, excluir }
 
 class Pasta extends StatelessWidget {
+  final String id;
   final String nomePasta;
   final String descricao;
   final Function onPressed;
   final bool divider;
 
   Pasta({
+    @required this.id,
     @required this.nomePasta,
     @required this.onPressed,
     @required this.descricao,
@@ -36,6 +39,14 @@ class Pasta extends StatelessWidget {
     );
     if (res == 'excluir') {
       _deletarPasta(context);
+    }
+    if (res == 'editar') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => NovaPasta(id: id),
+        ),
+      );
     }
   }
 

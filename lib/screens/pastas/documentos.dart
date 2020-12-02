@@ -40,6 +40,7 @@ class _DocumentosState extends State<Documentos> {
           Padding(
             padding: const EdgeInsets.only(top: 16.0),
             child: Pasta(
+              id: widget.idPasta,
               nomePasta: widget.nomePasta,
               descricao: widget.descricao,
               onPressed: () {},

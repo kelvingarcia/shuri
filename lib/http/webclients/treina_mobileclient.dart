@@ -7,6 +7,7 @@ import 'package:shuri/models/arquivo_pdf.dart';
 import 'package:shuri/models/documento_dto.dart';
 import 'package:shuri/models/imagem_arquivo.dart';
 import 'package:shuri/models/paginas.dart';
+import 'package:shuri/models/pasta_model.dart';
 import 'package:shuri/models/pasta_dto.dart';
 import 'package:shuri/models/pasta_reponse.dart';
 import 'package:shuri/models/pessoa.dart';
@@ -174,5 +175,17 @@ class TreinaMobileClient {
     );
     List<dynamic> listaDocs = jsonDecode(response.body);
     return listaDocs.map((element) => DocumentoDTO.fromJson(element)).toList();
+  }
+
+    static Future<PastaModel> getUmaPasta(String idPasta) async {
+    var prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    var response = await client.get(
+      baseUrl + 'umaPasta/' + idPasta,
+      headers: {
+        'Authorization': token,
+      },
+    );
+    return PastaModel.fromJson(jsonDecode(response.body));
   }
 }

@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:shuri/components/botao_redondo.dart';
 import 'package:shuri/http/webclients/treina_mobileclient.dart';
 import 'package:shuri/models/pasta_dto.dart';
 
 class NovaPasta extends StatefulWidget {
+  final String id;
+
+  const NovaPasta({
+    Key key,
+    this.id,
+  }) : super(key: key);
+
   @override
   _NovaPastaState createState() => _NovaPastaState();
 }
@@ -17,6 +25,22 @@ class _NovaPastaState extends State<NovaPasta> {
   List<String> _usuarios = List();
   Widget botaoAdd = Icon(Icons.add_circle);
   bool erro = false;
+
+  @override
+  void initState() {
+    debugPrint('entrou no init State');
+    super.initState();
+    if (widget.id != null) {
+      SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
+        var pastaModel = await TreinaMobileClient.getUmaPasta(widget.id);
+        setState(() {
+          _pastaController.text = pastaModel.nomePasta;
+          _descricaoController.text = pastaModel.descricao;
+          _usuarios = pastaModel.membros;
+        });
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

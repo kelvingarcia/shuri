@@ -53,6 +53,7 @@ class _PaginaInicialState extends State<PaginaInicial> {
                         itemCount: snapshot.data.length,
                         itemBuilder: (context, index) {
                           return Pasta(
+                            id: snapshot.data[index].id,
                             nomePasta: snapshot.data[index].nomePasta,
                             descricao: snapshot.data[index].descricao,
                             onPressed: () => Navigator.push(
