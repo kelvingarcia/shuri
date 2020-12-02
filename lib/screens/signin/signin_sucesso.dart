@@ -21,7 +21,7 @@ class _SignInSucessoState extends State<SignInSucesso> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Envio'),
+        title: Text('Login'),
       ),
       body: FutureBuilder<ReconhecimentoToken>(
         future: Future.value(
@@ -77,16 +77,34 @@ class _SignInSucessoState extends State<SignInSucesso> {
                         ),
                         Center(
                           child: Text(
-                            'Documento enviado!',
+                            'Reconhecimento concluído!',
                             style: TextStyle(
                               fontSize: 24.0,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
+                        Center(
+                          child: Column(
+                            children: [
+                              Text(
+                                reconhecimentoToken.reconhecimento.pessoa.nome,
+                                style: TextStyle(
+                                  fontSize: 24.0,
+                                ),
+                              ),
+                              Text(
+                                reconhecimentoToken.reconhecimento.pessoa.email,
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                         BotaoRedondo(
-                          icon: Icon(Icons.arrow_back),
-                          text: 'Retornar para a pasta',
+                          icon: Icon(Icons.arrow_forward),
+                          text: 'Prosseguir',
                           onPressed: () => Navigator.push(
                             context,
                             MaterialPageRoute(

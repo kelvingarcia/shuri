@@ -105,6 +105,8 @@ class _SignInVideoMobileState extends State<SignInVideoMobile> {
   @override
   Widget build(BuildContext context) {
     contextGlobal = context;
+    final size = MediaQuery.of(context).size;
+    final deviceRatio = size.width / size.height;
     return Scaffold(
       appBar: AppBar(
         title: Text('Reconhecimento facial'),
@@ -116,7 +118,15 @@ class _SignInVideoMobileState extends State<SignInVideoMobile> {
               future: _initializeControllerFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
-                  return CameraPreview(_controller);
+                  return Transform.scale(
+                    scale: _controller.value.aspectRatio / deviceRatio,
+                    child: Center(
+                      child: AspectRatio(
+                        aspectRatio: _controller.value.aspectRatio,
+                        child: CameraPreview(_controller),
+                      ),
+                    ),
+                  );
                 } else {
                   return Center(child: CircularProgressIndicator());
                 }

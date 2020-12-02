@@ -21,7 +21,7 @@ class _EnvioSucessoState extends State<EnvioSucesso> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: Text('Envio'),
       ),
       body: FutureBuilder<ReconhecimentoToken>(
         future: Future.value(
@@ -54,7 +54,7 @@ class _EnvioSucessoState extends State<EnvioSucesso> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     CircularProgressIndicator(),
-                    Text('Enviando...')
+                    Text('Reconhecendo...')
                   ],
                 ),
               );
@@ -77,34 +77,16 @@ class _EnvioSucessoState extends State<EnvioSucesso> {
                         ),
                         Center(
                           child: Text(
-                            'Reconhecimento concluído!',
+                            'Documento enviado!',
                             style: TextStyle(
                               fontSize: 24.0,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                        Center(
-                          child: Column(
-                            children: [
-                              Text(
-                                reconhecimentoToken.reconhecimento.pessoa.nome,
-                                style: TextStyle(
-                                  fontSize: 24.0,
-                                ),
-                              ),
-                              Text(
-                                reconhecimentoToken.reconhecimento.pessoa.email,
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
                         BotaoRedondo(
-                          icon: Icon(Icons.arrow_forward),
-                          text: 'Prosseguir',
+                          icon: Icon(Icons.arrow_back),
+                          text: 'Retornar para a pasta',
                           onPressed: () => Navigator.push(
                             context,
                             MaterialPageRoute(
