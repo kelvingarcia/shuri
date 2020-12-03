@@ -23,7 +23,9 @@ class MenuInicial extends StatelessWidget {
               onPressed: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SignUp(),
+                  builder: (context) => SignUp(
+                    editar: false,
+                  ),
                 ),
               ),
             ),

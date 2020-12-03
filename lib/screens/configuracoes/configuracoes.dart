@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shuri/components/barra_inferior.dart';
 import 'package:shuri/components/item_menu.dart';
+import 'package:shuri/screens/signup/signup.dart';
 
 class Configuracoes extends StatelessWidget {
   Future<void> _showSobre(BuildContext context) async {
@@ -108,6 +109,12 @@ class Configuracoes extends StatelessWidget {
                 icone: Icons.person,
                 texto: 'Editar usuário',
                 borda: BorderSide.none,
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SignUp(editar: true),
+                  ),
+                ),
               ),
             ),
             ItemMenu(

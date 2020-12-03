@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shuri/components/botao_redondo.dart';
 import 'package:shuri/components/card_principal.dart';
 import 'package:shuri/models/treina_request.dart';
 import 'package:shuri/screens/signup/camera_info.dart';
 
 class SignUp extends StatefulWidget {
+  final bool editar;
+
+  const SignUp({
+    Key key,
+    @required this.editar,
+  }) : super(key: key);
+
   @override
   _SignUpState createState() => _SignUpState();
 }
@@ -13,6 +22,20 @@ class _SignUpState extends State<SignUp> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nomeController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
+      if (widget.editar) {
+        final prefs = await SharedPreferences.getInstance();
+        setState(() {
+          _nomeController.text = prefs.getString('nomeUsuario');
+          _emailController.text = prefs.getString('emailUsuario');
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +80,7 @@ class _SignUpState extends State<SignUp> {
               ),
               BotaoRedondo(
                 icon: Icon(Icons.arrow_forward),
-                text: 'Prosseguir',
+                text: widget.editar ? 'Alterar vídeo' : 'Prosseguir',
                 onPressed: () {
                   var treinaRequest = TreinaRequest(
                       nome: _nomeController.text, email: _emailController.text);
@@ -68,6 +91,14 @@ class _SignUpState extends State<SignUp> {
                     ),
                   );
                 },
+              ),
+              Visibility(
+                visible: widget.editar,
+                child: BotaoRedondo(
+                  icon: Icon(Icons.save),
+                  text: 'Salvar',
+                  onPressed: () => Navigator.pop(context),
+                ),
               ),
             ],
           ),
