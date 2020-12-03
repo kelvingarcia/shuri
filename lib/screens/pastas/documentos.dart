@@ -71,7 +71,7 @@ class _DocumentosState extends State<Documentos> {
                       Padding(
                         padding: const EdgeInsets.only(right: 8.0),
                         child: IconePessoa(
-                          texto: 'G',
+                          texto: 'M',
                         ),
                       ),
                       Padding(

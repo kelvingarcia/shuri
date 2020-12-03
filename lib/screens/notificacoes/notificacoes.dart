@@ -17,70 +17,76 @@ class _NotificacoesState extends State<Notificacoes> {
             textoPessoa: 'K',
             voltar: false,
           ),
-          Padding(
-            padding: const EdgeInsets.only(
-                top: 24.0, left: 8.0, right: 8.0, bottom: 8.0),
-            child: Card(
-              elevation: 10,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  const ListTile(
-                    leading: Icon(Icons.check),
-                    title: Text('Kelvin assinou o documento Estágio'),
-                    subtitle: Text('8:00 a.m.'),
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                      top: 24.0, left: 8.0, right: 8.0, bottom: 8.0),
+                  child: Card(
+                    elevation: 10,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        const ListTile(
+                          leading: Icon(Icons.check),
+                          title: Text('Kelvin assinou o documento Contrato'),
+                          subtitle: Text('8:00 a.m.'),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Card(
-              elevation: 10,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  const ListTile(
-                    leading: Icon(Icons.person),
-                    title:
-                        Text('Kelvin adicionou um novo usuário à pasta Teste'),
-                    subtitle: Text('9:00 a.m.'),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Card(
+                    elevation: 10,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        const ListTile(
+                          leading: Icon(Icons.person),
+                          title: Text(
+                              'Kelvin adicionou um novo usuário à pasta Primeira pasta'),
+                          subtitle: Text('9:00 a.m.'),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Card(
-              elevation: 10,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  const ListTile(
-                    leading: Icon(Icons.article),
-                    title: Text('Kelvin adicionou um novo documento'),
-                    subtitle: Text('8:30 a.m.'),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Card(
+                    elevation: 10,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        const ListTile(
+                          leading: Icon(Icons.article),
+                          title: Text('Kelvin adicionou o documento Contrato a Primeira Pasta'),
+                          subtitle: Text('8:30 a.m.'),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Card(
-              elevation: 10,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  const ListTile(
-                    leading: Icon(Icons.folder),
-                    title: Text('Kelvin criou uma nova pasta'),
-                    subtitle: Text('8:00 a.m.'),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Card(
+                    elevation: 10,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        const ListTile(
+                          leading: Icon(Icons.folder),
+                          title: Text('Kelvin criou a pasta Primeira pasta'),
+                          subtitle: Text('8:00 a.m.'),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ],
