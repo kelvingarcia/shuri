@@ -8,9 +8,6 @@ import 'package:shuri/models/reconhecimento_token.dart';
 import 'package:shuri/screens/pastas/pagina_inicial.dart';
 
 class EnvioSucesso extends StatefulWidget {
-  final ReconheceRequest reconheceRequest;
-
-  EnvioSucesso(this.reconheceRequest);
 
   @override
   _EnvioSucessoState createState() => _EnvioSucessoState();

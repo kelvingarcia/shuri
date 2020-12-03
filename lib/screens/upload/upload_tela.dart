@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:shuri/components/barra_superior.dart';
 import 'package:shuri/components/botao_redondo.dart';
 import 'package:shuri/http/webclients/treina_mobileclient.dart';
@@ -26,12 +27,19 @@ class UploadTela extends StatefulWidget {
 class _UploadTelaState extends State<UploadTela> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nomeController = TextEditingController();
+  List<String> emails = List();
   List<bool> marcados = List();
 
   @override
   void initState() {
     _nomeController.text = widget.titulo;
     super.initState();
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
+      var pastaModel = await TreinaMobileClient.getUmaPasta(widget.idPasta);
+      setState(() {
+        emails = pastaModel.membros;
+      });
+    });
   }
 
   @override
@@ -68,54 +76,25 @@ class _UploadTelaState extends State<UploadTela> {
                       padding: const EdgeInsets.only(top: 16.0),
                       child: Text('Quem deve assinar:'),
                     ),
-                    FutureBuilder<PastaModel>(
-                      future: TreinaMobileClient.getUmaPasta(widget.idPasta),
-                      builder: (context, snapshot) {
-                        switch (snapshot.connectionState) {
-                          case ConnectionState.none:
-                            return Container();
-                            break;
-                          case ConnectionState.waiting:
-                            return Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  CircularProgressIndicator(),
-                                  Text('Aguarde...')
-                                ],
-                              ),
-                            );
-                            break;
-                          case ConnectionState.active:
-                            break;
-                          case ConnectionState.done:
-                            if (snapshot.hasData) {
-                              return ListView.builder(
-                                shrinkWrap: true,
-                                scrollDirection: Axis.vertical,
-                                itemCount: snapshot.data.membros.length,
-                                itemBuilder: (context, index) {
-                                  marcados.add(false);
-                                  return Row(
-                                    children: [
-                                      Checkbox(
-                                        value: marcados[index],
-                                        onChanged: (value) {
-                                          setState(() {
-                                            marcados[index] = value;
-                                          });
-                                        },
-                                      ),
-                                      Text(snapshot.data.membros[index]),
-                                    ],
-                                  );
-                                },
-                              );
-                            }
-                            break;
-                        }
-                        return Container();
+                    ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      itemCount: emails.length,
+                      itemBuilder: (context, index) {
+                        marcados.add(false);
+                        return Row(
+                          children: [
+                            Checkbox(
+                              value: marcados[index],
+                              onChanged: (value) {
+                                setState(() {
+                                  marcados[index] = value;
+                                });
+                              },
+                            ),
+                            Text(emails[index]),
+                          ],
+                        );
                       },
                     ),
                     Center(

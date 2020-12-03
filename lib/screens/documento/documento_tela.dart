@@ -8,6 +8,8 @@ import 'dart:ui' as ui;
 
 import 'package:shuri/http/webclients/treina_mobileclient.dart';
 import 'package:shuri/models/paginas.dart';
+import 'package:shuri/models/reconhece_request.dart';
+import 'package:shuri/screens/documento/envio_sucesso.dart';
 import 'package:shuri/screens/sucesso/tela_sucesso.dart';
 
 class DocumentoTela extends StatefulWidget {
@@ -155,7 +157,12 @@ class _DocumentoTelaState extends State<DocumentoTela> {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.send),
-        onPressed: () => _capturePng(),
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => EnvioSucesso(),
+          ),
+        ),
       ),
     );
   }
