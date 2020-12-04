@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:shuri/components/botao_redondo.dart';
 import 'package:shuri/models/pessoa_dto.dart';
 import 'package:shuri/models/predicao_confianca.dart';
-import 'package:shuri/models/reconhece_request.dart';
 import 'package:shuri/models/reconhecimento.dart';
 import 'package:shuri/models/reconhecimento_token.dart';
 import 'package:shuri/screens/pastas/pagina_inicial.dart';

@@ -50,13 +50,6 @@ class Pasta extends StatelessWidget {
     }
   }
 
-  Rect _getWidgetGlobalRect(GlobalKey key) {
-    RenderBox renderBox = key.currentContext.findRenderObject();
-    var offset = renderBox.localToGlobal(Offset.zero);
-    return Rect.fromLTWH(
-        offset.dx, offset.dy, renderBox.size.width, renderBox.size.height);
-  }
-
   Future<void> _deletarPasta(BuildContext context) async {
     return showDialog<void>(
       context: context,

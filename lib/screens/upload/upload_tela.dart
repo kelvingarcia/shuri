@@ -7,7 +7,6 @@ import 'package:shuri/components/barra_superior.dart';
 import 'package:shuri/components/botao_redondo.dart';
 import 'package:shuri/http/webclients/treina_mobileclient.dart';
 import 'package:shuri/models/arquivo_pdf.dart';
-import 'package:shuri/models/pasta_model.dart';
 
 class UploadTela extends StatefulWidget {
   final String idPasta;

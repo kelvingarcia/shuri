@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shuri/components/botao_redondo.dart';
-import 'package:shuri/components/card_principal.dart';
 import 'package:shuri/models/treina_request.dart';
 import 'package:shuri/screens/signup/camera_info.dart';
 

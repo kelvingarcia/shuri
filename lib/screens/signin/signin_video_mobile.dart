@@ -88,7 +88,7 @@ class _SignInVideoMobileState extends State<SignInVideoMobile> {
 
   void startTimer() {
     const oneSec = const Duration(seconds: 1);
-    _timer = Timer.periodic(
+    this._timer = Timer.periodic(
       oneSec,
       (Timer timer) => setState(
         () {

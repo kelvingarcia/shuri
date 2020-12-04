@@ -175,6 +175,7 @@ class _NovaPastaState extends State<NovaPasta> {
                   onPressed: () async {
                     var pastaResponse = await TreinaMobileClient.criaNovaPasta(
                       PastaDTO(
+                        null,
                         _pastaController.text,
                         _descricaoController.text,
                         _usuarios,

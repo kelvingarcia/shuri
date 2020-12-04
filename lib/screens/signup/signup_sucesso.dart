@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shuri/components/botao_redondo.dart';
-import 'package:shuri/http/webclients/treina_mobileclient.dart';
 import 'package:shuri/models/pessoa_dto.dart';
 import 'package:shuri/models/treina_request.dart';
 import 'package:shuri/screens/menu_inicial.dart';
