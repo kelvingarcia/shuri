@@ -171,11 +171,11 @@ class _NovaPastaState extends State<NovaPasta> {
               Center(
                 child: BotaoRedondo(
                   icon: Icon(Icons.done),
-                  text: 'Criar pasta',
+                  text: widget.id != null ? 'Editar pasta' : 'Criar pasta',
                   onPressed: () async {
                     var pastaResponse = await TreinaMobileClient.criaNovaPasta(
                       PastaDTO(
-                        null,
+                        widget.id,
                         _pastaController.text,
                         _descricaoController.text,
                         _usuarios,
