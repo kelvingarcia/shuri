@@ -380,8 +380,8 @@ class _ImagemComAssinaturaState extends State<ImagemComAssinatura>
     super.initState();
     WidgetsBinding.instance.scheduleFrameCallback((timeStamp) {
       setState(() {
-        bolinha1 = 190 - (MediaQuery.of(context).size.width * 0.013);
-        bolinha2 = 190 - (MediaQuery.of(context).size.width * 0.013);
+        bolinha1 = 190 - (MediaQuery.of(context).size.width * 0.073);
+        bolinha2 = 190 - (MediaQuery.of(context).size.width * 0.073);
       });
     });
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
@@ -483,6 +483,7 @@ class _ImagemComAssinaturaState extends State<ImagemComAssinatura>
             child: Visibility(
               visible: visibilidade,
               child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onPanUpdate: (tapInfo) {
                   setState(() {
                     bolinha2 += tapInfo.delta.dy;
@@ -507,10 +508,17 @@ class _ImagemComAssinaturaState extends State<ImagemComAssinatura>
                     strokeWidth = strokeWidth * porcentagem;
                   });
                 },
-                child: Icon(
-                  Icons.circle,
-                  color: Colors.grey,
-                  size: MediaQuery.of(context).size.width * 0.03,
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.15,
+                  height: MediaQuery.of(context).size.width * 0.15,
+                  color: Colors.transparent,
+                  child: Center(
+                    child: Icon(
+                      Icons.circle,
+                      color: Colors.grey,
+                      size: MediaQuery.of(context).size.width * 0.03,
+                    ),
+                  ),
                 ),
               ),
             ),
