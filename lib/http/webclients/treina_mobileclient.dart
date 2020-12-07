@@ -192,4 +192,16 @@ class TreinaMobileClient {
     );
     return PastaModel.fromJson(jsonDecode(response.body));
   }
+
+  static Future<PastaModel> desativaPasta(String id) async {
+    var prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    var response = await client.delete(
+      baseUrl + 'pasta/' + id,
+      headers: {
+        'Authorization': token,
+      },
+    );
+    return PastaModel.fromJson(jsonDecode(response.body));
+  }
 }

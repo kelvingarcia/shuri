@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rect_getter/rect_getter.dart';
+import 'package:shuri/http/webclients/treina_mobileclient.dart';
 import 'package:shuri/screens/pastas/nova_pasta.dart';
+import 'package:shuri/screens/pastas/pagina_inicial.dart';
 
 enum OpcoesMenu { editar, excluir }
 
@@ -10,12 +12,14 @@ class Pasta extends StatelessWidget {
   final String descricao;
   final Function onPressed;
   final bool divider;
+  final PaginaInicialState paginaInicialState;
 
   Pasta({
     @required this.id,
     @required this.nomePasta,
     @required this.onPressed,
     @required this.descricao,
+    this.paginaInicialState,
     this.divider = true,
   });
 
@@ -73,7 +77,11 @@ class Pasta extends StatelessWidget {
             ),
             FlatButton(
               child: Text('Sim'),
-              onPressed: () {
+              onPressed: () async {
+                await TreinaMobileClient.desativaPasta(id);
+                if(paginaInicialState != null){
+                  paginaInicialState.setState(() {});
+                }
                 Navigator.of(context).pop();
               },
             ),

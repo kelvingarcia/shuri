@@ -10,10 +10,10 @@ import 'documentos.dart';
 
 class PaginaInicial extends StatefulWidget {
   @override
-  _PaginaInicialState createState() => _PaginaInicialState();
+  PaginaInicialState createState() => PaginaInicialState();
 }
 
-class _PaginaInicialState extends State<PaginaInicial> {
+class PaginaInicialState extends State<PaginaInicial> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,6 +53,7 @@ class _PaginaInicialState extends State<PaginaInicial> {
                         itemCount: snapshot.data.length,
                         itemBuilder: (context, index) {
                           return Pasta(
+                            paginaInicialState: this,
                             id: snapshot.data[index].id,
                             nomePasta: snapshot.data[index].nomePasta,
                             descricao: snapshot.data[index].descricao,
