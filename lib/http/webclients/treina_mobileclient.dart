@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shuri/http/webclient.dart';
+import 'package:shuri/models/arquivo_assinado.dart';
 import 'package:shuri/models/arquivo_pdf.dart';
 import 'package:shuri/models/documento_dto.dart';
 import 'package:shuri/models/imagem_arquivo.dart';
@@ -88,8 +89,9 @@ class TreinaMobileClient {
   static Future<Paginas> getDocumentoArquivo(String nomeArquivo) async {
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
+    var email = prefs.getString('emailUsuario');
     var request = await client.get(
-      baseUrl + 'documentoArquivo/' + nomeArquivo,
+      baseUrl + 'documentoArquivo/' + nomeArquivo + '/' + email,
       headers: {
         'Authorization': token,
       },
@@ -171,8 +173,9 @@ class TreinaMobileClient {
   static Future<List<DocumentoDTO>> documentosNaPasta(String idPasta) async {
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
+    var email = prefs.getString('emailUsuario');
     var response = await client.get(
-      baseUrl + 'documentosNaPasta/' + idPasta,
+      baseUrl + 'documentosNaPasta/' + idPasta + '/' + email,
       headers: {
         'Authorization': token,
       },
@@ -203,5 +206,22 @@ class TreinaMobileClient {
       },
     );
     return PastaModel.fromJson(jsonDecode(response.body));
+  }
+
+  static Future<DocumentoDTO> assinaDocumento(
+      List<String> arquivoAssinado, String idDocumento) async {
+    var prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    var email = prefs.getString('emailUsuario');
+    var arquivoPost = ArquivoAssinado(email, arquivoAssinado);
+    var response = await client.post(
+      baseUrl + 'assinaDocumento/' + idDocumento,
+      headers: {
+        'Content-type': 'application/json',
+        'Authorization': token,
+      },
+      body: jsonEncode(arquivoPost.toJson()),
+    );
+    return DocumentoDTO.fromJson(jsonDecode(response.body));
   }
 }

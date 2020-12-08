@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:shuri/http/webclients/treina_mobileclient.dart';
 import 'dart:ui' as ui;
 
 import 'package:shuri/models/paginas.dart';
@@ -10,8 +12,13 @@ import 'package:shuri/screens/documento/envio_sucesso.dart';
 
 class DocumentoTela extends StatefulWidget {
   final Paginas paginas;
+  final String idDocumento;
 
-  DocumentoTela({Key key, this.paginas}) : super(key: key);
+  DocumentoTela({
+    Key key,
+    @required this.paginas,
+    @required this.idDocumento,
+  }) : super(key: key);
 
   @override
   _DocumentoTelaState createState() => _DocumentoTelaState();
@@ -29,13 +36,18 @@ class _DocumentoTelaState extends State<DocumentoTela> {
     });
   }
 
-  Future<void> _captureEach(GlobalKey key, List<Uint8List> listaPng) async {
+  Future<void> _captureEach(List<Uint8List> listaPng) async {
+    var key = listaKeys[listaPng.length];
     Scrollable.ensureVisible(key.currentContext);
     RenderRepaintBoundary boundary = key.currentContext.findRenderObject();
+    await Future.delayed(const Duration(seconds: 3));
     ui.Image image = await boundary.toImage(pixelRatio: 3.0);
     ByteData byteData = await image.toByteData(format: ui.ImageByteFormat.png);
     var pngBytes = byteData.buffer.asUint8List();
     listaPng.add(pngBytes);
+    if (listaPng.length < listaKeys.length) {
+      await _captureEach(listaPng);
+    }
   }
 
   void _capturePng() async {
@@ -56,48 +68,28 @@ class _DocumentoTelaState extends State<DocumentoTela> {
     );
     try {
       print('inside');
-      // Scrollable.ensureVisible(listaKeys.last.currentContext);
-      // RenderRepaintBoundary boundary =
-      //     listaKeys.last.currentContext.findRenderObject();
-      // await Future.delayed(const Duration(seconds: 3));
-      // ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-      // ByteData byteData =
-      //     await image.toByteData(format: ui.ImageByteFormat.png);
-      // var pngBytes = byteData.buffer.asUint8List();
       List<Uint8List> listaPng = List();
+      await _captureEach(listaPng);
 
-      listaKeys.forEach((key) async {
-        await _captureEach(listaKeys.first, listaPng);
-      });
-
-      // Scrollable.ensureVisible(listaKeys[1].currentContext);
-      // RenderRepaintBoundary boundary2 =
-      //     listaKeys[1].currentContext.findRenderObject();
-      // await Future.delayed(const Duration(seconds: 1));
-      // ui.Image image2 = await boundary2.toImage(pixelRatio: 3.0);
-      // ByteData byteData2 =
-      //     await image2.toByteData(format: ui.ImageByteFormat.png);
-      // var pngBytes2 = byteData2.buffer.asUint8List();
-      // listaPng.add(pngBytes2);
-
-      // Scrollable.ensureVisible(listaKeys[2].currentContext);
-      // RenderRepaintBoundary boundary3 =
-      //     listaKeys[2].currentContext.findRenderObject();
-      // await Future.delayed(const Duration(seconds: 1));
-      // ui.Image image3 = await boundary3.toImage(pixelRatio: 3.0);
-      // ByteData byteData3 =
-      //     await image3.toByteData(format: ui.ImageByteFormat.png);
-      // var pngBytes3 = byteData3.buffer.asUint8List();
-      // listaPng.add(pngBytes3);
-
-      Navigator.push(
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => TesteImagens(
+      //       imagens: listaPng,
+      //     ),
+      //   ),
+      // );
+      List<String> arquivoAssinado =
+          listaPng.map((e) => base64Encode(e)).toList();
+      await TreinaMobileClient.assinaDocumento(
+          arquivoAssinado, widget.idDocumento);
+      await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => TesteImagens(
-            imagens: listaPng,
-          ),
+          builder: (context) => EnvioSucesso(),
         ),
       );
+      Navigator.pop(context);
       // var bs64 = base64Encode(pngBytes);
       // print(pngBytes);
       // print(bs64);
@@ -153,12 +145,7 @@ class _DocumentoTelaState extends State<DocumentoTela> {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.send),
-        onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => EnvioSucesso(),
-          ),
-        ),
+        onPressed: () => _capturePng(),
       ),
     );
   }

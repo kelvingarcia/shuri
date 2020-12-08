@@ -28,6 +28,7 @@ class _UploadTelaState extends State<UploadTela> {
   final TextEditingController _nomeController = TextEditingController();
   List<String> emails = List();
   List<bool> marcados = List();
+  List<String> marcadosString = List();
 
   @override
   void initState() {
@@ -88,6 +89,11 @@ class _UploadTelaState extends State<UploadTela> {
                               onChanged: (value) {
                                 setState(() {
                                   marcados[index] = value;
+                                  if(value){
+                                    marcadosString.add(emails[index]);
+                                  } else {
+                                    marcadosString.removeWhere((element) => element == emails[index]);
+                                  }
                                 });
                               },
                             ),
@@ -108,6 +114,7 @@ class _UploadTelaState extends State<UploadTela> {
                                 widget.arquivo.readAsBytesSync(),
                               ),
                               idPasta: widget.idPasta,
+                              assinantes: marcadosString,
                             ),
                           );
                           debugPrint(response);

@@ -6,12 +6,14 @@ class DocumentoCard extends StatelessWidget {
   final String nomeDocumento;
   final String horario;
   final String descricao;
+  final bool assinado;
 
   DocumentoCard({
     @required this.data,
     @required this.nomeDocumento,
     @required this.horario,
     @required this.descricao,
+    @required this.assinado,
   });
 
   void _simplePopup(BuildContext context, GlobalKey key) async {
@@ -89,7 +91,7 @@ class DocumentoCard extends StatelessWidget {
                   Column(
                     children: [
                       Visibility(
-                        visible: false,
+                        visible: assinado,
                         child: Icon(Icons.check),
                       ),
                       Text(

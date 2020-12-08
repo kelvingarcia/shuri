@@ -4,6 +4,7 @@ class ArquivoPDF {
   String descricao;
   final String dataHora;
   final String idPasta;
+  final List<String> assinantes;
 
   ArquivoPDF({
     this.nome,
@@ -11,6 +12,7 @@ class ArquivoPDF {
     this.descricao,
     this.dataHora,
     this.idPasta,
+    this.assinantes,
   });
 
   Map<String, dynamic> toJson() => {
@@ -18,6 +20,7 @@ class ArquivoPDF {
         'arquivo': arquivo,
         'idPasta': idPasta,
         'descricao': descricao,
+        'assinantes': assinantes,
       };
 
   ArquivoPDF.fromJson(Map<String, dynamic> json)
@@ -25,5 +28,6 @@ class ArquivoPDF {
         arquivo = json['arquivo'],
         descricao = json['descricao'],
         dataHora = json['dataHora'],
-        idPasta = json['idPasta'];
+        idPasta = json['idPasta'],
+        assinantes = json['assinantes'].cast<String>();
 }

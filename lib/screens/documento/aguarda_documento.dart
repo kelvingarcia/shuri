@@ -45,6 +45,7 @@ class _AguardaDocumentoState extends State<AguardaDocumento> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => DocumentoTela(
+                      idDocumento: widget.nomeArquivo,
                       paginas: snapshot.data,
                     ),
                   ),

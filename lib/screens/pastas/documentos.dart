@@ -131,6 +131,7 @@ class _DocumentosState extends State<Documentos> {
                               horario:
                                   snapshot.data[index].dataHora.substring(11),
                               descricao: snapshot.data[index].descricao ?? '',
+                              assinado: snapshot.data[index].assinado,
                             ),
                           );
                         },
