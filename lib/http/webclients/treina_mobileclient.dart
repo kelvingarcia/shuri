@@ -8,6 +8,7 @@ import 'package:shuri/models/arquivo_pdf.dart';
 import 'package:shuri/models/documento_dto.dart';
 import 'package:shuri/models/documento_model.dart';
 import 'package:shuri/models/imagem_arquivo.dart';
+import 'package:shuri/models/notificacoes_dto.dart';
 import 'package:shuri/models/paginas.dart';
 import 'package:shuri/models/pasta_model.dart';
 import 'package:shuri/models/pasta_dto.dart';
@@ -74,8 +75,29 @@ class TreinaMobileClient {
           'Authorization': prefs.getString('token'),
         },
         body: jsonEncode(pastaDTO.toJson()));
+    var nome = prefs.getString('nomeUsuario');
     final Map<String, dynamic> decodedJson = jsonDecode(response.body);
-    return PastaResponse.fromJson(decodedJson);
+    var pastaResponse = PastaResponse.fromJson(decodedJson);
+    if (response.statusCode == 200) {
+      if (pastaDTO.id == null) {
+        await salvaNotificacao(
+          NotificacoesDTO(
+            texto: '$nome criou a pasta ' + pastaDTO.nome,
+            tipo: 'PASTA',
+            idPasta: pastaResponse.id,
+          ),
+        );
+      } else {
+        await salvaNotificacao(
+          NotificacoesDTO(
+            texto: '$nome editou a pasta ' + pastaDTO.nome,
+            tipo: 'PASTA',
+            idPasta: pastaResponse.id,
+          ),
+        );
+      }
+    }
+    return pastaResponse;
   }
 
   // static Future<Imagem> teste(String nomeArquivo) async {
@@ -127,6 +149,25 @@ class TreinaMobileClient {
       },
       body: jsonEncode(arquivoPDF.toJson()),
     );
+    if (request.statusCode == 200) {
+      if (arquivoPDF.id == null) {
+        await salvaNotificacao(
+          NotificacoesDTO(
+            texto: '$nome adicionou o documento ' + arquivoPDF.nome,
+            tipo: 'DOCUMENTO',
+            idPasta: arquivoPDF.idPasta,
+          ),
+        );
+      } else {
+        await salvaNotificacao(
+          NotificacoesDTO(
+            texto: '$nome editou o documento ' + arquivoPDF.nome,
+            tipo: 'DOCUMENTO',
+            idPasta: arquivoPDF.idPasta,
+          ),
+        );
+      }
+    }
     return request.body;
   }
 
@@ -206,7 +247,18 @@ class TreinaMobileClient {
         'Authorization': token,
       },
     );
-    return PastaModel.fromJson(jsonDecode(response.body));
+    var nome = prefs.getString('nomeUsuario');
+    var pastaModel = PastaModel.fromJson(jsonDecode(response.body));
+    if (response.statusCode == 200) {
+      await salvaNotificacao(
+        NotificacoesDTO(
+          texto: '$nome excluiu a pasta ' + pastaModel.nomePasta,
+          tipo: 'EXCLUIR',
+          idPasta: id,
+        ),
+      );
+    }
+    return pastaModel;
   }
 
   static Future<DocumentoDTO> assinaDocumento(
@@ -214,6 +266,7 @@ class TreinaMobileClient {
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
     var email = prefs.getString('emailUsuario');
+    var nome = prefs.getString('nomeUsuario');
     var arquivoPost = ArquivoAssinado(email, arquivoAssinado);
     var response = await client.post(
       baseUrl + 'assinaDocumento/' + idDocumento,
@@ -223,19 +276,38 @@ class TreinaMobileClient {
       },
       body: jsonEncode(arquivoPost.toJson()),
     );
-    return DocumentoDTO.fromJson(jsonDecode(response.body));
+    var documentoDTO = DocumentoDTO.fromJson(jsonDecode(response.body));
+    if (response.statusCode == 200) {
+      await salvaNotificacaoDocumento(
+        NotificacoesDTO(
+          texto: '$nome assinou o documento ' + documentoDTO.nome,
+          tipo: 'ASSINATURA',
+        ),
+      );
+    }
+    return documentoDTO;
   }
 
   static Future<DocumentoDTO> desativaDocumento(String id) async {
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
+    var nome = prefs.getString('nomeUsuario');
     var response = await client.delete(
       baseUrl + 'documento/' + id,
       headers: {
         'Authorization': token,
       },
     );
-    return DocumentoDTO.fromJson(jsonDecode(response.body));
+    var documentoDTO = DocumentoDTO.fromJson(jsonDecode(response.body));
+    if (response.statusCode == 200) {
+      await salvaNotificacaoDocumento(
+        NotificacoesDTO(
+          texto: '$nome excluiu o documento ' + documentoDTO.nome,
+          tipo: 'ASSINATURA',
+        ),
+      );
+    }
+    return documentoDTO;
   }
 
   static Future<DocumentoModel> getDocumentoCompleto(String idDocumento) async {
@@ -248,5 +320,53 @@ class TreinaMobileClient {
       },
     );
     return DocumentoModel.fromJson(jsonDecode(response.body));
+  }
+
+  static Future<NotificacoesDTO> salvaNotificacao(
+      NotificacoesDTO notificacoesDTO) async {
+    var prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    var response = await client.post(
+      baseUrl + 'notificacao',
+      headers: {
+        'Content-type': 'application/json',
+        'Authorization': token,
+      },
+      body: jsonEncode(notificacoesDTO.toJson()),
+    );
+    return NotificacoesDTO.fromJson(jsonDecode(response.body));
+  }
+
+  static Future<NotificacoesDTO> salvaNotificacaoDocumento(
+      NotificacoesDTO notificacoesDTO) async {
+    var prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    var email = prefs.getString('emailUsuario');
+    var response = await client.post(
+      baseUrl + 'notificacao/' + email,
+      headers: {
+        'Content-type': 'application/json',
+        'Authorization': token,
+      },
+      body: jsonEncode(notificacoesDTO.toJson()),
+    );
+    return NotificacoesDTO.fromJson(jsonDecode(response.body));
+  }
+
+  static Future<List<NotificacoesDTO>> getListaNotificacoes() async {
+    var prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    var email = prefs.getString('emailUsuario');
+    var response = await client.get(
+      baseUrl + 'notificacoes/' + email,
+      headers: {
+        'Authorization': token,
+      },
+    );
+    List<dynamic> listaNotificacoes = jsonDecode(response.body);
+    return listaNotificacoes
+        .map((element) => NotificacoesDTO.fromJson(element))
+        .toList()
+        .reversed.toList();
   }
 }
