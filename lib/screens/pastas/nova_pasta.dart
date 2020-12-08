@@ -157,9 +157,16 @@ class _NovaPastaState extends State<NovaPasta> {
                               _usuarios[index],
                               style: TextStyle(fontSize: 16.0),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Icon(Icons.delete),
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  _usuarios.remove(_usuarios[index]);
+                                });
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Icon(Icons.delete),
+                              ),
                             ),
                           ],
                         ),
