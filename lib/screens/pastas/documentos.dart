@@ -23,10 +23,10 @@ class Documentos extends StatefulWidget {
   });
 
   @override
-  _DocumentosState createState() => _DocumentosState();
+  DocumentosState createState() => DocumentosState();
 }
 
-class _DocumentosState extends State<Documentos> {
+class DocumentosState extends State<Documentos> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -125,6 +125,7 @@ class _DocumentosState extends State<Documentos> {
                               ),
                             ),
                             child: DocumentoCard(
+                              id: snapshot.data[index].id,
                               data:
                                   snapshot.data[index].dataHora.substring(0, 5),
                               nomeDocumento: snapshot.data[index].nome ?? '',
@@ -132,6 +133,7 @@ class _DocumentosState extends State<Documentos> {
                                   snapshot.data[index].dataHora.substring(11),
                               descricao: snapshot.data[index].descricao ?? '',
                               assinado: snapshot.data[index].assinado,
+                              documentosState: this,
                             ),
                           );
                         },

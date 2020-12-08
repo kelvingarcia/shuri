@@ -224,4 +224,16 @@ class TreinaMobileClient {
     );
     return DocumentoDTO.fromJson(jsonDecode(response.body));
   }
+
+    static Future<DocumentoDTO> desativaDocumento(String id) async {
+    var prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    var response = await client.delete(
+      baseUrl + 'documento/' + id,
+      headers: {
+        'Authorization': token,
+      },
+    );
+    return DocumentoDTO.fromJson(jsonDecode(response.body));
+  }
 }

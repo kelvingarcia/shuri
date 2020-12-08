@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:rect_getter/rect_getter.dart';
+import 'package:shuri/http/webclients/treina_mobileclient.dart';
+import 'package:shuri/screens/pastas/documentos.dart';
 
 class DocumentoCard extends StatelessWidget {
+  final String id;
   final String data;
   final String nomeDocumento;
   final String horario;
   final String descricao;
   final bool assinado;
+  final DocumentosState documentosState;
 
   DocumentoCard({
+    @required this.id,
     @required this.data,
     @required this.nomeDocumento,
     @required this.horario,
     @required this.descricao,
     @required this.assinado,
+    @required this.documentosState,
   });
 
   void _simplePopup(BuildContext context, GlobalKey key) async {
@@ -62,7 +68,11 @@ class DocumentoCard extends StatelessWidget {
             ),
             FlatButton(
               child: Text('Sim'),
-              onPressed: () {
+              onPressed: () async {
+                await TreinaMobileClient.desativaDocumento(id);
+                if(documentosState != null){
+                  documentosState.setState(() {});
+                }
                 Navigator.of(context).pop();
               },
             ),
