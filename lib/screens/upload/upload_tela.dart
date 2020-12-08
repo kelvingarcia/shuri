@@ -7,16 +7,19 @@ import 'package:shuri/components/barra_superior.dart';
 import 'package:shuri/components/botao_redondo.dart';
 import 'package:shuri/http/webclients/treina_mobileclient.dart';
 import 'package:shuri/models/arquivo_pdf.dart';
+import 'package:shuri/models/documento_model.dart';
 
 class UploadTela extends StatefulWidget {
   final String idPasta;
+  final String idDocumento;
   final String titulo;
   final File arquivo;
 
   UploadTela({
     @required this.idPasta,
     @required this.titulo,
-    @required this.arquivo,
+    this.arquivo,
+    this.idDocumento,
   });
 
   @override
@@ -35,9 +38,28 @@ class _UploadTelaState extends State<UploadTela> {
     _nomeController.text = widget.titulo;
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
+      DocumentoModel documentoModel;
       var pastaModel = await TreinaMobileClient.getUmaPasta(widget.idPasta);
+      if (widget.idDocumento != null) {
+        documentoModel =
+            await TreinaMobileClient.getDocumentoCompleto(widget.idDocumento);
+      }
+      List<bool> marcadosLista = List();
+      pastaModel.membros.forEach((element) {
+        marcadosLista.add(false);
+      });
       setState(() {
         emails = pastaModel.membros;
+        if (widget.idDocumento != null) {
+          marcadosString = documentoModel.assinantes;
+          marcadosString.forEach((e) {
+            var indexWhere = emails.indexWhere((element) => element == e);
+            if (indexWhere != -1) {
+              marcadosLista[indexWhere] = true;
+            }
+          });
+        }
+        marcados = marcadosLista;
       });
     });
   }
@@ -81,7 +103,6 @@ class _UploadTelaState extends State<UploadTela> {
                       scrollDirection: Axis.vertical,
                       itemCount: emails.length,
                       itemBuilder: (context, index) {
-                        marcados.add(false);
                         return Row(
                           children: [
                             Checkbox(
@@ -89,10 +110,11 @@ class _UploadTelaState extends State<UploadTela> {
                               onChanged: (value) {
                                 setState(() {
                                   marcados[index] = value;
-                                  if(value){
+                                  if (value) {
                                     marcadosString.add(emails[index]);
                                   } else {
-                                    marcadosString.removeWhere((element) => element == emails[index]);
+                                    marcadosString.removeWhere(
+                                        (element) => element == emails[index]);
                                   }
                                 });
                               },
@@ -107,17 +129,27 @@ class _UploadTelaState extends State<UploadTela> {
                         icon: Icon(Icons.done),
                         text: 'Fazer upload',
                         onPressed: () async {
-                          var response = await TreinaMobileClient.postArquivo(
-                            ArquivoPDF(
-                              nome: _nomeController.text,
-                              arquivo: base64.encode(
-                                widget.arquivo.readAsBytesSync(),
+                          if (widget.idDocumento == null) {
+                            var response = await TreinaMobileClient.postArquivo(
+                              ArquivoPDF(
+                                nome: _nomeController.text,
+                                arquivo: base64.encode(
+                                  widget.arquivo.readAsBytesSync(),
+                                ),
+                                idPasta: widget.idPasta,
+                                assinantes: marcadosString,
                               ),
-                              idPasta: widget.idPasta,
-                              assinantes: marcadosString,
-                            ),
-                          );
-                          debugPrint(response);
+                            );
+                            debugPrint(response);
+                          } else {
+                            var response = await TreinaMobileClient.postArquivo(
+                              ArquivoPDF(
+                                id: widget.idDocumento,
+                                nome: _nomeController.text,
+                                assinantes: marcadosString,
+                              ),
+                            );
+                          }
                           Navigator.pop(context);
                         },
                       ),

@@ -6,6 +6,7 @@ import 'package:shuri/http/webclient.dart';
 import 'package:shuri/models/arquivo_assinado.dart';
 import 'package:shuri/models/arquivo_pdf.dart';
 import 'package:shuri/models/documento_dto.dart';
+import 'package:shuri/models/documento_model.dart';
 import 'package:shuri/models/imagem_arquivo.dart';
 import 'package:shuri/models/paginas.dart';
 import 'package:shuri/models/pasta_model.dart';
@@ -225,7 +226,7 @@ class TreinaMobileClient {
     return DocumentoDTO.fromJson(jsonDecode(response.body));
   }
 
-    static Future<DocumentoDTO> desativaDocumento(String id) async {
+  static Future<DocumentoDTO> desativaDocumento(String id) async {
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
     var response = await client.delete(
@@ -235,5 +236,17 @@ class TreinaMobileClient {
       },
     );
     return DocumentoDTO.fromJson(jsonDecode(response.body));
+  }
+
+  static Future<DocumentoModel> getDocumentoCompleto(String idDocumento) async {
+    var prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    var response = await client.get(
+      baseUrl + 'getDocumento/' + idDocumento,
+      headers: {
+        'Authorization': token,
+      },
+    );
+    return DocumentoModel.fromJson(jsonDecode(response.body));
   }
 }

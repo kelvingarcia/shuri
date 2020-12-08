@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rect_getter/rect_getter.dart';
 import 'package:shuri/http/webclients/treina_mobileclient.dart';
 import 'package:shuri/screens/pastas/documentos.dart';
+import 'package:shuri/screens/upload/upload_tela.dart';
 
 class DocumentoCard extends StatelessWidget {
   final String id;
@@ -10,6 +11,7 @@ class DocumentoCard extends StatelessWidget {
   final String horario;
   final String descricao;
   final bool assinado;
+  final String idPasta;
   final DocumentosState documentosState;
 
   DocumentoCard({
@@ -20,6 +22,7 @@ class DocumentoCard extends StatelessWidget {
     @required this.descricao,
     @required this.assinado,
     @required this.documentosState,
+    @required this.idPasta,
   });
 
   void _simplePopup(BuildContext context, GlobalKey key) async {
@@ -42,6 +45,18 @@ class DocumentoCard extends StatelessWidget {
     );
     if (res == 'excluir') {
       _deletarDocumento(context);
+    }
+    if (res == 'editar') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => UploadTela(
+            idDocumento: id,
+            titulo: nomeDocumento,
+            idPasta: idPasta,
+          ),
+        ),
+      );
     }
   }
 
@@ -70,7 +85,7 @@ class DocumentoCard extends StatelessWidget {
               child: Text('Sim'),
               onPressed: () async {
                 await TreinaMobileClient.desativaDocumento(id);
-                if(documentosState != null){
+                if (documentosState != null) {
                   documentosState.setState(() {});
                 }
                 Navigator.of(context).pop();

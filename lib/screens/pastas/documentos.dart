@@ -134,6 +134,7 @@ class DocumentosState extends State<Documentos> {
                               descricao: snapshot.data[index].descricao ?? '',
                               assinado: snapshot.data[index].assinado,
                               documentosState: this,
+                              idPasta: widget.idPasta,
                             ),
                           );
                         },
